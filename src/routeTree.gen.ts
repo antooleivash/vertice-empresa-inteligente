@@ -12,7 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppRrhhVacacionesRouteImport } from './routes/_app/rrhh/vacaciones'
+import { Route as AppRrhhLiquidacionesRouteImport } from './routes/_app/rrhh/liquidaciones'
+import { Route as AppRrhhHorasExtrasRouteImport } from './routes/_app/rrhh/horas-extras'
 import { Route as AppRrhhEmpleadosRouteImport } from './routes/_app/rrhh/empleados'
+import { Route as AppRrhhCartasRouteImport } from './routes/_app/rrhh/cartas'
+import { Route as AppRrhhAsistenciaRouteImport } from './routes/_app/rrhh/asistencia'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -28,35 +33,101 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRrhhVacacionesRoute = AppRrhhVacacionesRouteImport.update({
+  id: '/rrhh/vacaciones',
+  path: '/rrhh/vacaciones',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRrhhLiquidacionesRoute = AppRrhhLiquidacionesRouteImport.update({
+  id: '/rrhh/liquidaciones',
+  path: '/rrhh/liquidaciones',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRrhhHorasExtrasRoute = AppRrhhHorasExtrasRouteImport.update({
+  id: '/rrhh/horas-extras',
+  path: '/rrhh/horas-extras',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppRrhhEmpleadosRoute = AppRrhhEmpleadosRouteImport.update({
   id: '/rrhh/empleados',
   path: '/rrhh/empleados',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRrhhCartasRoute = AppRrhhCartasRouteImport.update({
+  id: '/rrhh/cartas',
+  path: '/rrhh/cartas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRrhhAsistenciaRoute = AppRrhhAsistenciaRouteImport.update({
+  id: '/rrhh/asistencia',
+  path: '/rrhh/asistencia',
   getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
+  '/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
+  '/rrhh/cartas': typeof AppRrhhCartasRoute
   '/rrhh/empleados': typeof AppRrhhEmpleadosRoute
+  '/rrhh/horas-extras': typeof AppRrhhHorasExtrasRoute
+  '/rrhh/liquidaciones': typeof AppRrhhLiquidacionesRoute
+  '/rrhh/vacaciones': typeof AppRrhhVacacionesRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/': typeof AppIndexRoute
+  '/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
+  '/rrhh/cartas': typeof AppRrhhCartasRoute
   '/rrhh/empleados': typeof AppRrhhEmpleadosRoute
+  '/rrhh/horas-extras': typeof AppRrhhHorasExtrasRoute
+  '/rrhh/liquidaciones': typeof AppRrhhLiquidacionesRoute
+  '/rrhh/vacaciones': typeof AppRrhhVacacionesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
+  '/_app/rrhh/cartas': typeof AppRrhhCartasRoute
   '/_app/rrhh/empleados': typeof AppRrhhEmpleadosRoute
+  '/_app/rrhh/horas-extras': typeof AppRrhhHorasExtrasRoute
+  '/_app/rrhh/liquidaciones': typeof AppRrhhLiquidacionesRoute
+  '/_app/rrhh/vacaciones': typeof AppRrhhVacacionesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/rrhh/empleados'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/rrhh/asistencia'
+    | '/rrhh/cartas'
+    | '/rrhh/empleados'
+    | '/rrhh/horas-extras'
+    | '/rrhh/liquidaciones'
+    | '/rrhh/vacaciones'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/' | '/rrhh/empleados'
-  id: '__root__' | '/_app' | '/login' | '/_app/' | '/_app/rrhh/empleados'
+  to:
+    | '/login'
+    | '/'
+    | '/rrhh/asistencia'
+    | '/rrhh/cartas'
+    | '/rrhh/empleados'
+    | '/rrhh/horas-extras'
+    | '/rrhh/liquidaciones'
+    | '/rrhh/vacaciones'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/login'
+    | '/_app/'
+    | '/_app/rrhh/asistencia'
+    | '/_app/rrhh/cartas'
+    | '/_app/rrhh/empleados'
+    | '/_app/rrhh/horas-extras'
+    | '/_app/rrhh/liquidaciones'
+    | '/_app/rrhh/vacaciones'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -87,6 +158,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/rrhh/vacaciones': {
+      id: '/_app/rrhh/vacaciones'
+      path: '/rrhh/vacaciones'
+      fullPath: '/rrhh/vacaciones'
+      preLoaderRoute: typeof AppRrhhVacacionesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/rrhh/liquidaciones': {
+      id: '/_app/rrhh/liquidaciones'
+      path: '/rrhh/liquidaciones'
+      fullPath: '/rrhh/liquidaciones'
+      preLoaderRoute: typeof AppRrhhLiquidacionesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/rrhh/horas-extras': {
+      id: '/_app/rrhh/horas-extras'
+      path: '/rrhh/horas-extras'
+      fullPath: '/rrhh/horas-extras'
+      preLoaderRoute: typeof AppRrhhHorasExtrasRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/rrhh/empleados': {
       id: '/_app/rrhh/empleados'
       path: '/rrhh/empleados'
@@ -94,17 +186,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRrhhEmpleadosRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/rrhh/cartas': {
+      id: '/_app/rrhh/cartas'
+      path: '/rrhh/cartas'
+      fullPath: '/rrhh/cartas'
+      preLoaderRoute: typeof AppRrhhCartasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/rrhh/asistencia': {
+      id: '/_app/rrhh/asistencia'
+      path: '/rrhh/asistencia'
+      fullPath: '/rrhh/asistencia'
+      preLoaderRoute: typeof AppRrhhAsistenciaRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
+  AppRrhhAsistenciaRoute: typeof AppRrhhAsistenciaRoute
+  AppRrhhCartasRoute: typeof AppRrhhCartasRoute
   AppRrhhEmpleadosRoute: typeof AppRrhhEmpleadosRoute
+  AppRrhhHorasExtrasRoute: typeof AppRrhhHorasExtrasRoute
+  AppRrhhLiquidacionesRoute: typeof AppRrhhLiquidacionesRoute
+  AppRrhhVacacionesRoute: typeof AppRrhhVacacionesRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
+  AppRrhhAsistenciaRoute: AppRrhhAsistenciaRoute,
+  AppRrhhCartasRoute: AppRrhhCartasRoute,
   AppRrhhEmpleadosRoute: AppRrhhEmpleadosRoute,
+  AppRrhhHorasExtrasRoute: AppRrhhHorasExtrasRoute,
+  AppRrhhLiquidacionesRoute: AppRrhhLiquidacionesRoute,
+  AppRrhhVacacionesRoute: AppRrhhVacacionesRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
