@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_app/rrhh/empleados")({ component: Emplea
 
 const empty: Partial<Empleado> = {
   rut: "", nombre: "", cargo: "", area: AREAS[0], fecha_ingreso: new Date().toISOString().slice(0, 10),
-  sueldo_base: 0, activo: true,
+  sueldo_base: 0, activo: true, rol: "empleado", email: "",
 };
 
 function EmpleadosPage() {
@@ -107,6 +107,19 @@ function EmpleadosPage() {
                     <SelectContent>
                       <SelectItem value="true">Activo</SelectItem>
                       <SelectItem value="false">Inactivo</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Field>
+                <Field label="Email (acceso al portal)">
+                  <Input type="email" value={form.email ?? ""} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="empleado@empresa.cl" />
+                </Field>
+                <Field label="Rol">
+                  <Select value={form.rol ?? "empleado"} onValueChange={(v) => setForm({ ...form, rol: v as Empleado["rol"] })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="empleado">Empleado</SelectItem>
+                      <SelectItem value="supervisor">Supervisor</SelectItem>
+                      <SelectItem value="admin">Admin / RRHH</SelectItem>
                     </SelectContent>
                   </Select>
                 </Field>
