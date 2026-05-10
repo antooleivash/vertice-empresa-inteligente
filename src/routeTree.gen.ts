@@ -18,6 +18,7 @@ import { Route as PortalPermisosRouteImport } from './routes/portal.permisos'
 import { Route as PortalLiquidacionesRouteImport } from './routes/portal.liquidaciones'
 import { Route as PortalDocumentosRouteImport } from './routes/portal.documentos'
 import { Route as PortalAsistenciaRouteImport } from './routes/portal.asistencia'
+import { Route as AppSimuladorRouteImport } from './routes/_app/simulador'
 import { Route as AppInventarioRouteImport } from './routes/_app/inventario'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppBalanceRouteImport } from './routes/_app/balance'
@@ -93,6 +94,11 @@ const PortalAsistenciaRoute = PortalAsistenciaRouteImport.update({
   id: '/asistencia',
   path: '/asistencia',
   getParentRoute: () => PortalRoute,
+} as any)
+const AppSimuladorRoute = AppSimuladorRouteImport.update({
+  id: '/simulador',
+  path: '/simulador',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppInventarioRoute = AppInventarioRouteImport.update({
   id: '/inventario',
@@ -263,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/balance': typeof AppBalanceRoute
   '/dashboard': typeof AppDashboardRoute
   '/inventario': typeof AppInventarioRoute
+  '/simulador': typeof AppSimuladorRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
@@ -304,6 +311,7 @@ export interface FileRoutesByTo {
   '/balance': typeof AppBalanceRoute
   '/dashboard': typeof AppDashboardRoute
   '/inventario': typeof AppInventarioRoute
+  '/simulador': typeof AppSimuladorRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
@@ -347,6 +355,7 @@ export interface FileRoutesById {
   '/_app/balance': typeof AppBalanceRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/inventario': typeof AppInventarioRoute
+  '/_app/simulador': typeof AppSimuladorRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
@@ -390,6 +399,7 @@ export interface FileRouteTypes {
     | '/balance'
     | '/dashboard'
     | '/inventario'
+    | '/simulador'
     | '/portal/asistencia'
     | '/portal/documentos'
     | '/portal/liquidaciones'
@@ -431,6 +441,7 @@ export interface FileRouteTypes {
     | '/balance'
     | '/dashboard'
     | '/inventario'
+    | '/simulador'
     | '/portal/asistencia'
     | '/portal/documentos'
     | '/portal/liquidaciones'
@@ -473,6 +484,7 @@ export interface FileRouteTypes {
     | '/_app/balance'
     | '/_app/dashboard'
     | '/_app/inventario'
+    | '/_app/simulador'
     | '/portal/asistencia'
     | '/portal/documentos'
     | '/portal/liquidaciones'
@@ -580,6 +592,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/portal/asistencia'
       preLoaderRoute: typeof PortalAsistenciaRouteImport
       parentRoute: typeof PortalRoute
+    }
+    '/_app/simulador': {
+      id: '/_app/simulador'
+      path: '/simulador'
+      fullPath: '/simulador'
+      preLoaderRoute: typeof AppSimuladorRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/inventario': {
       id: '/_app/inventario'
@@ -805,6 +824,7 @@ interface AppRouteChildren {
   AppBalanceRoute: typeof AppBalanceRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppInventarioRoute: typeof AppInventarioRoute
+  AppSimuladorRoute: typeof AppSimuladorRoute
   AppConfiguracionEmpresaRoute: typeof AppConfiguracionEmpresaRoute
   AppCumplimientoAlertasRoute: typeof AppCumplimientoAlertasRoute
   AppCumplimientoContratosRoute: typeof AppCumplimientoContratosRoute
@@ -838,6 +858,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppBalanceRoute: AppBalanceRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppInventarioRoute: AppInventarioRoute,
+  AppSimuladorRoute: AppSimuladorRoute,
   AppConfiguracionEmpresaRoute: AppConfiguracionEmpresaRoute,
   AppCumplimientoAlertasRoute: AppCumplimientoAlertasRoute,
   AppCumplimientoContratosRoute: AppCumplimientoContratosRoute,

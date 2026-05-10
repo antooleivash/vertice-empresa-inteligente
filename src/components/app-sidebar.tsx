@@ -34,6 +34,7 @@ const sections: Section[] = [
       { to: "/finanzas/ingresos", label: "Ingresos", icon: ArrowUpCircle },
       { to: "/finanzas/flujo-caja", label: "Flujo de caja", icon: TrendingUp },
       { to: "/finanzas/presupuesto", label: "Presupuesto vs real", icon: Target },
+      { to: "/simulador", label: "Simulador financiero", icon: TrendingUp },
       { to: "/balance", label: "Balance (Activos y Pasivos)", icon: Scale },
     ],
   },
