@@ -14,6 +14,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, Printer, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { AFP_LIST, calcular, type ItemMonto, type LiqInput } from "@/lib/payroll";
+import { useIndicadores } from "@/hooks/use-indicadores";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
 
 export const Route = createFileRoute("/_app/rrhh/liquidaciones")({ component: LiquidacionesPage });
 
@@ -50,9 +53,24 @@ const empty: Form = {
 
 function LiquidacionesPage() {
   const { empleados, empleadosMap } = useEmpleados();
+  const { data: indicadores } = useIndicadores();
+  const ufActual = indicadores.uf?.valor;
+  const utmActual = indicadores.utm?.valor;
+  const salarioMinimo = indicadores.sueldo_minimo?.valor;
   const [items, setItems] = useState<Liq[]>([]);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<Form>(empty);
+
+  // Sincroniza UF actual en el formulario apenas se carga
+  useEffect(() => {
+    if (ufActual && form.uf_valor !== Math.round(ufActual)) {
+      setForm((f) => ({ ...f, uf_valor: Math.round(ufActual) }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ufActual]);
+
+  const bajoMinimo = salarioMinimo && form.sueldo_base > 0 && form.sueldo_base < salarioMinimo;
+  const gratifMensualUTM = utmActual ? Math.round((utmActual * 4.75) / 12) : null;
 
   const load = async () => {
     const { data } = await supabase.from("liquidaciones").select("*").order("periodo", { ascending: false });
