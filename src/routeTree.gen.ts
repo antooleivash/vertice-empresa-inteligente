@@ -13,11 +13,11 @@ import { Route as PortalRouteImport } from './routes/portal'
 import { Route as MarcarRouteImport } from './routes/marcar'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
-import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as PortalPermisosRouteImport } from './routes/portal.permisos'
 import { Route as PortalLiquidacionesRouteImport } from './routes/portal.liquidaciones'
 import { Route as PortalDocumentosRouteImport } from './routes/portal.documentos'
 import { Route as PortalAsistenciaRouteImport } from './routes/portal.asistencia'
+import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as PrintTipoIdRouteImport } from './routes/print.$tipo.$id'
 import { Route as AppRrhhVacacionesRouteImport } from './routes/_app/rrhh/vacaciones'
 import { Route as AppRrhhLiquidacionesRouteImport } from './routes/_app/rrhh/liquidaciones'
@@ -66,11 +66,6 @@ const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppIndexRoute = AppIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppRoute,
-} as any)
 const PortalPermisosRoute = PortalPermisosRouteImport.update({
   id: '/permisos',
   path: '/permisos',
@@ -90,6 +85,11 @@ const PortalAsistenciaRoute = PortalAsistenciaRouteImport.update({
   id: '/asistencia',
   path: '/asistencia',
   getParentRoute: () => PortalRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
 } as any)
 const PrintTipoIdRoute = PrintTipoIdRouteImport.update({
   id: '/print/$tipo/$id',
@@ -238,10 +238,11 @@ const AppConfiguracionEmpresaRoute = AppConfiguracionEmpresaRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AppIndexRoute
+  '/': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/dashboard': typeof AppDashboardRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
@@ -276,14 +277,15 @@ export interface FileRoutesByFullPath {
   '/print/$tipo/$id': typeof PrintTipoIdRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/dashboard': typeof AppDashboardRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
   '/portal/permisos': typeof PortalPermisosRoute
-  '/': typeof AppIndexRoute
   '/configuracion/empresa': typeof AppConfiguracionEmpresaRoute
   '/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
   '/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
@@ -319,11 +321,11 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/_app/dashboard': typeof AppDashboardRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
   '/portal/permisos': typeof PortalPermisosRoute
-  '/_app/': typeof AppIndexRoute
   '/_app/configuracion/empresa': typeof AppConfiguracionEmpresaRoute
   '/_app/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
   '/_app/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
@@ -360,6 +362,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/dashboard'
     | '/portal/asistencia'
     | '/portal/documentos'
     | '/portal/liquidaciones'
@@ -394,14 +397,15 @@ export interface FileRouteTypes {
     | '/print/$tipo/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/dashboard'
     | '/portal/asistencia'
     | '/portal/documentos'
     | '/portal/liquidaciones'
     | '/portal/permisos'
-    | '/'
     | '/configuracion/empresa'
     | '/cumplimiento/alertas'
     | '/cumplimiento/contratos'
@@ -436,11 +440,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/_app/dashboard'
     | '/portal/asistencia'
     | '/portal/documentos'
     | '/portal/liquidaciones'
     | '/portal/permisos'
-    | '/_app/'
     | '/_app/configuracion/empresa'
     | '/_app/cumplimiento/alertas'
     | '/_app/cumplimiento/contratos'
@@ -509,13 +513,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/': {
-      id: '/_app/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/portal/permisos': {
       id: '/portal/permisos'
       path: '/permisos'
@@ -543,6 +540,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/portal/asistencia'
       preLoaderRoute: typeof PortalAsistenciaRouteImport
       parentRoute: typeof PortalRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
     }
     '/print/$tipo/$id': {
       id: '/print/$tipo/$id'
@@ -744,7 +748,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
-  AppIndexRoute: typeof AppIndexRoute
+  AppDashboardRoute: typeof AppDashboardRoute
   AppConfiguracionEmpresaRoute: typeof AppConfiguracionEmpresaRoute
   AppCumplimientoAlertasRoute: typeof AppCumplimientoAlertasRoute
   AppCumplimientoContratosRoute: typeof AppCumplimientoContratosRoute
@@ -775,7 +779,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppIndexRoute: AppIndexRoute,
+  AppDashboardRoute: AppDashboardRoute,
   AppConfiguracionEmpresaRoute: AppConfiguracionEmpresaRoute,
   AppCumplimientoAlertasRoute: AppCumplimientoAlertasRoute,
   AppCumplimientoContratosRoute: AppCumplimientoContratosRoute,
@@ -834,3 +838,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
