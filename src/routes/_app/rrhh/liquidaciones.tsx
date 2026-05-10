@@ -131,7 +131,22 @@ function LiquidacionesPage() {
             <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
               <DialogHeader><DialogTitle>Nueva liquidación</DialogTitle></DialogHeader>
 
-              <Section title="Datos básicos">
+              {bajoMinimo && (
+                <Alert variant="destructive" className="mb-2">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertTitle>Sueldo bajo el mínimo legal</AlertTitle>
+                  <AlertDescription>
+                    El sueldo base ({formatCLP(form.sueldo_base)}) está bajo el salario mínimo vigente ({formatCLP(salarioMinimo!)}). Riesgo de multa DT.
+                  </AlertDescription>
+                </Alert>
+              )}
+              <div className="rounded-md border bg-muted/40 p-2 text-xs flex flex-wrap gap-x-4 gap-y-1 mb-2">
+                <span>UF actual: <strong className="tabular-nums">{ufActual ? formatCLP(ufActual) : "—"}</strong></span>
+                <span>UTM actual: <strong className="tabular-nums">{utmActual ? formatCLP(utmActual) : "—"}</strong></span>
+                {gratifMensualUTM !== null && <span>Tope gratificación legal: <strong className="tabular-nums">{formatCLP(gratifMensualUTM)}</strong> /mes</span>}
+                <span>Salario mínimo: <strong className="tabular-nums">{salarioMinimo ? formatCLP(salarioMinimo) : "—"}</strong></span>
+              </div>
+
                 <div className="col-span-2">
                   <Label>Empleado</Label>
                   <Select value={form.empleado_id} onValueChange={(v) => {
