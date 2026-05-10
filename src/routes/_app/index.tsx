@@ -163,6 +163,9 @@ function Dashboard() {
           </ResponsiveContainer>
         </div>
       </Card>
+        <QRMarcar />
+      </div>
+
 
       <Sheet open={open !== null} onOpenChange={(v) => !v && setOpen(null)}>
         <SheetContent className="w-full sm:max-w-md overflow-y-auto">
