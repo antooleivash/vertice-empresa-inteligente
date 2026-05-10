@@ -7,6 +7,7 @@ import { detectarAlertas, alertaTone, type AlertaIA } from "@/lib/ia-engine";
 import { Card } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { QRMarcar } from "@/components/qr-marcar";
+import { IndicadoresBar } from "@/components/indicadores-bar";
 import { Users, Clock, AlertTriangle, Wallet } from "lucide-react";
 import {
   Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer,
@@ -92,6 +93,8 @@ function Dashboard() {
         <h1 className="text-2xl font-semibold tracking-tight">Dashboard gerencial</h1>
         <p className="text-sm text-muted-foreground">Visión consolidada del estado operacional y financiero del día.</p>
       </header>
+
+      <IndicadoresBar />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <KpiCard
