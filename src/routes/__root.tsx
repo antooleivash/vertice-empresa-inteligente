@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/use-auth";
+import { VerticeIAChat } from "@/components/vertice-ia-chat";
 
 import appCss from "../styles.css?url";
 
@@ -84,6 +85,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Outlet />
+        <VerticeIAChat />
         <Toaster richColors position="top-right" />
       </AuthProvider>
     </QueryClientProvider>
