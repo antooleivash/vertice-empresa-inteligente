@@ -280,6 +280,8 @@ function ImpuestosPage() {
   return (
     <PageShell>
       <PageHeader title="Impuestos" description="Documentos tributarios, IVA débito y crédito, balance F29 mensual." />
+      <UTMBanner />
+
 
       <Alert className="mb-4 border-blue-200 bg-blue-50 text-blue-900">
         <Info className="h-4 w-4" />
