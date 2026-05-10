@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, Clock, Timer, FileWarning, Receipt, CalendarDays,
   Wallet, TrendingUp, Target, Activity, Gauge, Sparkles, Bell, Megaphone,
   Briefcase, UserSearch, Store, Truck, LogOut, Building2, BarChart3, ArrowDownCircle, ArrowUpCircle,
-  Shield, FileSignature, FileCheck2, ShieldAlert, Settings, Package, Scale, ShoppingCart, Lock, Upload,
+  Shield, FileSignature, FileCheck2, ShieldAlert, Settings, Package, Scale, ShoppingCart, Lock, Upload, Landmark,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useEmpresa } from "@/hooks/use-empresa";
@@ -41,6 +41,7 @@ const sections: Section[] = [
       { to: "/finanzas/flujo-caja", label: "Flujo de caja", icon: TrendingUp, module: "finanzas" },
       { to: "/finanzas/presupuesto", label: "Presupuesto vs real", icon: Target, module: "finanzas" },
       { to: "/simulador", label: "Simulador financiero", icon: TrendingUp, module: "simulador" },
+      { to: "/impuestos", label: "Impuestos (IVA / F29)", icon: Landmark, module: "impuestos" },
       { to: "/balance", label: "Balance (Activos y Pasivos)", icon: Scale, module: "balance" },
     ],
   },

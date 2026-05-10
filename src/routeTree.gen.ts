@@ -20,6 +20,7 @@ import { Route as PortalDocumentosRouteImport } from './routes/portal.documentos
 import { Route as PortalAsistenciaRouteImport } from './routes/portal.asistencia'
 import { Route as AppSimuladorRouteImport } from './routes/_app/simulador'
 import { Route as AppInventarioRouteImport } from './routes/_app/inventario'
+import { Route as AppImpuestosRouteImport } from './routes/_app/impuestos'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppCajaRouteImport } from './routes/_app/caja'
 import { Route as AppBalanceRouteImport } from './routes/_app/balance'
@@ -106,6 +107,11 @@ const AppSimuladorRoute = AppSimuladorRouteImport.update({
 const AppInventarioRoute = AppInventarioRouteImport.update({
   id: '/inventario',
   path: '/inventario',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppImpuestosRoute = AppImpuestosRouteImport.update({
+  id: '/impuestos',
+  path: '/impuestos',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
@@ -288,6 +294,7 @@ export interface FileRoutesByFullPath {
   '/balance': typeof AppBalanceRoute
   '/caja': typeof AppCajaRoute
   '/dashboard': typeof AppDashboardRoute
+  '/impuestos': typeof AppImpuestosRoute
   '/inventario': typeof AppInventarioRoute
   '/simulador': typeof AppSimuladorRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
@@ -333,6 +340,7 @@ export interface FileRoutesByTo {
   '/balance': typeof AppBalanceRoute
   '/caja': typeof AppCajaRoute
   '/dashboard': typeof AppDashboardRoute
+  '/impuestos': typeof AppImpuestosRoute
   '/inventario': typeof AppInventarioRoute
   '/simulador': typeof AppSimuladorRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
@@ -380,6 +388,7 @@ export interface FileRoutesById {
   '/_app/balance': typeof AppBalanceRoute
   '/_app/caja': typeof AppCajaRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/impuestos': typeof AppImpuestosRoute
   '/_app/inventario': typeof AppInventarioRoute
   '/_app/simulador': typeof AppSimuladorRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
@@ -427,6 +436,7 @@ export interface FileRouteTypes {
     | '/balance'
     | '/caja'
     | '/dashboard'
+    | '/impuestos'
     | '/inventario'
     | '/simulador'
     | '/portal/asistencia'
@@ -472,6 +482,7 @@ export interface FileRouteTypes {
     | '/balance'
     | '/caja'
     | '/dashboard'
+    | '/impuestos'
     | '/inventario'
     | '/simulador'
     | '/portal/asistencia'
@@ -518,6 +529,7 @@ export interface FileRouteTypes {
     | '/_app/balance'
     | '/_app/caja'
     | '/_app/dashboard'
+    | '/_app/impuestos'
     | '/_app/inventario'
     | '/_app/simulador'
     | '/portal/asistencia'
@@ -642,6 +654,13 @@ declare module '@tanstack/react-router' {
       path: '/inventario'
       fullPath: '/inventario'
       preLoaderRoute: typeof AppInventarioRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/impuestos': {
+      id: '/_app/impuestos'
+      path: '/impuestos'
+      fullPath: '/impuestos'
+      preLoaderRoute: typeof AppImpuestosRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/dashboard': {
@@ -882,6 +901,7 @@ interface AppRouteChildren {
   AppBalanceRoute: typeof AppBalanceRoute
   AppCajaRoute: typeof AppCajaRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppImpuestosRoute: typeof AppImpuestosRoute
   AppInventarioRoute: typeof AppInventarioRoute
   AppSimuladorRoute: typeof AppSimuladorRoute
   AppConfiguracionEmpresaRoute: typeof AppConfiguracionEmpresaRoute
@@ -919,6 +939,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppBalanceRoute: AppBalanceRoute,
   AppCajaRoute: AppCajaRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppImpuestosRoute: AppImpuestosRoute,
   AppInventarioRoute: AppInventarioRoute,
   AppSimuladorRoute: AppSimuladorRoute,
   AppConfiguracionEmpresaRoute: AppConfiguracionEmpresaRoute,
