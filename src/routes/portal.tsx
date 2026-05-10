@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useNavigate, useRouterState, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useCurrentEmpleado } from "@/hooks/use-current-empleado";
@@ -12,6 +12,7 @@ function PortalLayout() {
   const { user, loading, signOut } = useAuth();
   const { empleado, isAdmin, loading: empLoading } = useCurrentEmpleado();
   const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -22,6 +23,10 @@ function PortalLayout() {
       navigate({ to: "/" });
     }
   }, [loading, empLoading, user, isAdmin, navigate]);
+
+  useEffect(() => {
+    if (pathname === "/portal") navigate({ to: "/portal/asistencia" });
+  }, [pathname, navigate]);
 
   if (loading || empLoading) {
     return <div className="flex h-screen items-center justify-center text-sm text-muted-foreground">Cargando…</div>;
