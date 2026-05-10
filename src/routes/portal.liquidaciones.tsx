@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 
-export const Route = createFileRoute("/_portal/liquidaciones")({ component: PortalLiquidaciones });
+export const Route = createFileRoute("/portal/liquidaciones")({ component: PortalLiquidaciones });
 
 function PortalLiquidaciones() {
   const { empleado } = useCurrentEmpleado();

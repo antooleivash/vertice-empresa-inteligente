@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Camera, LogIn, LogOut, MapPin, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_portal/asistencia")({ component: PortalAsistencia });
+export const Route = createFileRoute("/portal/asistencia")({ component: PortalAsistencia });
 
 type Marca = { id: string; fecha: string; entrada: string | null; salida: string | null };
 

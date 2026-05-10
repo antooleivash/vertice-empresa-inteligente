@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_portal/permisos")({ component: PortalPermisos });
+export const Route = createFileRoute("/portal/permisos")({ component: PortalPermisos });
 
 const TIPOS = ["Vacaciones", "Permiso con goce", "Permiso sin goce", "Licencia médica"];
 

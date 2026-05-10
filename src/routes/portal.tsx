@@ -6,7 +6,7 @@ import { PortalBottomNav } from "@/components/portal-bottom-nav";
 import { Building2, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/_portal")({ component: PortalLayout });
+export const Route = createFileRoute("/portal")({ component: PortalLayout });
 
 function PortalLayout() {
   const { user, loading, signOut } = useAuth();

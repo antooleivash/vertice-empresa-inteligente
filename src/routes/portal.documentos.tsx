@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FileDown, FileText, Check, X } from "lucide-react";
 
-export const Route = createFileRoute("/_portal/documentos")({ component: PortalDocumentos });
+export const Route = createFileRoute("/portal/documentos")({ component: PortalDocumentos });
 
 const DOCS = ["Contrato firmado", "Reglamento interno", "ODI firmada", "Liquidaciones al día"];
 
