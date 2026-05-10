@@ -3,9 +3,10 @@ import {
   LayoutDashboard, Users, Clock, Timer, FileWarning, Receipt, CalendarDays,
   Wallet, TrendingUp, Target, Activity, Gauge, Sparkles, Bell, Megaphone,
   Briefcase, UserSearch, Store, Truck, LogOut, Building2, BarChart3, ArrowDownCircle, ArrowUpCircle,
-  Shield, FileSignature, FileCheck2, ShieldAlert,
+  Shield, FileSignature, FileCheck2, ShieldAlert, Settings,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useEmpresa } from "@/hooks/use-empresa";
 import { cn } from "@/lib/utils";
 
 type Item = { to: string; label: string; icon: React.ComponentType<{ className?: string }> };
@@ -79,21 +80,30 @@ const sections: Section[] = [
       { to: "/marketplace/proveedores", label: "Proveedores", icon: Truck },
     ],
   },
+  {
+    title: "Configuración",
+    items: [
+      { to: "/configuracion/empresa", label: "Empresa", icon: Settings },
+    ],
+  },
 ];
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { user, signOut } = useAuth();
+  const { empresa } = useEmpresa();
   const navigate = useNavigate();
 
   return (
     <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
       <div className="flex items-center gap-2 px-5 py-5 border-b border-sidebar-border">
-        <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
-          <Building2 className="h-5 w-5" />
-        </div>
+        {empresa.logo_url
+          ? <img src={empresa.logo_url} alt="Logo" className="h-9 w-9 rounded-md object-contain bg-white p-0.5" />
+          : <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
+              <Building2 className="h-5 w-5" />
+            </div>}
         <div className="flex flex-col leading-tight">
-          <span className="text-base font-semibold tracking-tight">Vértice</span>
+          <span className="text-base font-semibold tracking-tight truncate">{empresa.nombre || "Vértice"}</span>
           <span className="text-[11px] text-muted-foreground">Plataforma Empresarial</span>
         </div>
       </div>
