@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { useCurrentEmpleado } from "@/hooks/use-current-empleado";
 import { AppSidebar } from "@/components/app-sidebar";
 
 export const Route = createFileRoute("/_app")({
@@ -9,22 +10,27 @@ export const Route = createFileRoute("/_app")({
 
 function AppLayout() {
   const { user, loading } = useAuth();
+  const { isAdmin, loading: empLoading } = useCurrentEmpleado();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !user) {
-      navigate({ to: "/login" });
-    }
+    if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 
-  if (loading) {
+  useEffect(() => {
+    if (!loading && !empLoading && user && !isAdmin) {
+      navigate({ to: "/portal" });
+    }
+  }, [loading, empLoading, user, isAdmin, navigate]);
+
+  if (loading || empLoading) {
     return (
       <div className="flex h-screen items-center justify-center text-sm text-muted-foreground">
         Cargando…
       </div>
     );
   }
-  if (!user) return null;
+  if (!user || !isAdmin) return null;
 
   return (
     <div className="flex h-screen w-full bg-background">
