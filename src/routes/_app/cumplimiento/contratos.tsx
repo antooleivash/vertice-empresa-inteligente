@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2, FileText } from "lucide-react";
+import { Plus, Trash2, FileText, FileDown } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/cumplimiento/contratos")({ component: ContratosPage });
