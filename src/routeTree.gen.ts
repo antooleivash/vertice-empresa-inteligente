@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppRrhhEmpleadosRouteImport } from './routes/_app/rrhh/empleados'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -27,27 +28,35 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRrhhEmpleadosRoute = AppRrhhEmpleadosRouteImport.update({
+  id: '/rrhh/empleados',
+  path: '/rrhh/empleados',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
+  '/rrhh/empleados': typeof AppRrhhEmpleadosRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/': typeof AppIndexRoute
+  '/rrhh/empleados': typeof AppRrhhEmpleadosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/rrhh/empleados': typeof AppRrhhEmpleadosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths: '/' | '/login' | '/rrhh/empleados'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/'
-  id: '__root__' | '/_app' | '/login' | '/_app/'
+  to: '/login' | '/' | '/rrhh/empleados'
+  id: '__root__' | '/_app' | '/login' | '/_app/' | '/_app/rrhh/empleados'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -78,15 +87,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/rrhh/empleados': {
+      id: '/_app/rrhh/empleados'
+      path: '/rrhh/empleados'
+      fullPath: '/rrhh/empleados'
+      preLoaderRoute: typeof AppRrhhEmpleadosRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
+  AppRrhhEmpleadosRoute: typeof AppRrhhEmpleadosRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
+  AppRrhhEmpleadosRoute: AppRrhhEmpleadosRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
