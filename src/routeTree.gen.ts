@@ -21,6 +21,7 @@ import { Route as PortalAsistenciaRouteImport } from './routes/portal.asistencia
 import { Route as AppSimuladorRouteImport } from './routes/_app/simulador'
 import { Route as AppInventarioRouteImport } from './routes/_app/inventario'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppCajaRouteImport } from './routes/_app/caja'
 import { Route as AppBalanceRouteImport } from './routes/_app/balance'
 import { Route as PrintTipoIdRouteImport } from './routes/print.$tipo.$id'
 import { Route as AppRrhhVacacionesRouteImport } from './routes/_app/rrhh/vacaciones'
@@ -108,6 +109,11 @@ const AppInventarioRoute = AppInventarioRouteImport.update({
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCajaRoute = AppCajaRouteImport.update({
+  id: '/caja',
+  path: '/caja',
   getParentRoute: () => AppRoute,
 } as any)
 const AppBalanceRoute = AppBalanceRouteImport.update({
@@ -267,6 +273,7 @@ export interface FileRoutesByFullPath {
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
   '/balance': typeof AppBalanceRoute
+  '/caja': typeof AppCajaRoute
   '/dashboard': typeof AppDashboardRoute
   '/inventario': typeof AppInventarioRoute
   '/simulador': typeof AppSimuladorRoute
@@ -309,6 +316,7 @@ export interface FileRoutesByTo {
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
   '/balance': typeof AppBalanceRoute
+  '/caja': typeof AppCajaRoute
   '/dashboard': typeof AppDashboardRoute
   '/inventario': typeof AppInventarioRoute
   '/simulador': typeof AppSimuladorRoute
@@ -353,6 +361,7 @@ export interface FileRoutesById {
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
   '/_app/balance': typeof AppBalanceRoute
+  '/_app/caja': typeof AppCajaRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/inventario': typeof AppInventarioRoute
   '/_app/simulador': typeof AppSimuladorRoute
@@ -397,6 +406,7 @@ export interface FileRouteTypes {
     | '/marcar'
     | '/portal'
     | '/balance'
+    | '/caja'
     | '/dashboard'
     | '/inventario'
     | '/simulador'
@@ -439,6 +449,7 @@ export interface FileRouteTypes {
     | '/marcar'
     | '/portal'
     | '/balance'
+    | '/caja'
     | '/dashboard'
     | '/inventario'
     | '/simulador'
@@ -482,6 +493,7 @@ export interface FileRouteTypes {
     | '/marcar'
     | '/portal'
     | '/_app/balance'
+    | '/_app/caja'
     | '/_app/dashboard'
     | '/_app/inventario'
     | '/_app/simulador'
@@ -612,6 +624,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/caja': {
+      id: '/_app/caja'
+      path: '/caja'
+      fullPath: '/caja'
+      preLoaderRoute: typeof AppCajaRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/balance': {
@@ -822,6 +841,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppBalanceRoute: typeof AppBalanceRoute
+  AppCajaRoute: typeof AppCajaRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppInventarioRoute: typeof AppInventarioRoute
   AppSimuladorRoute: typeof AppSimuladorRoute
@@ -856,6 +876,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppBalanceRoute: AppBalanceRoute,
+  AppCajaRoute: AppCajaRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppInventarioRoute: AppInventarioRoute,
   AppSimuladorRoute: AppSimuladorRoute,
