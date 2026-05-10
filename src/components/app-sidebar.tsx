@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, Clock, Timer, FileWarning, Receipt, CalendarDays,
   Wallet, TrendingUp, Target, Activity, Gauge, Sparkles, Bell, Megaphone,
   Briefcase, UserSearch, Store, Truck, LogOut, Building2, BarChart3, ArrowDownCircle, ArrowUpCircle,
-  Shield, FileSignature, FileCheck2, ShieldAlert, Settings, Package, Scale, ShoppingCart, Lock, Upload,
+  Shield, FileSignature, FileCheck2, ShieldAlert, Settings, Package, Scale, ShoppingCart, Lock, Upload, Landmark,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useEmpresa } from "@/hooks/use-empresa";
