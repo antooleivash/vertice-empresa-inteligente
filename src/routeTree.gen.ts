@@ -36,6 +36,10 @@ import { Route as AppFinanzasGastosRouteImport } from './routes/_app/finanzas/ga
 import { Route as AppFinanzasFlujoCajaRouteImport } from './routes/_app/finanzas/flujo-caja'
 import { Route as AppFinanzasDashboardRouteImport } from './routes/_app/finanzas/dashboard'
 import { Route as AppFinanzasCostosRouteImport } from './routes/_app/finanzas/costos'
+import { Route as AppCumplimientoJornadaRouteImport } from './routes/_app/cumplimiento/jornada'
+import { Route as AppCumplimientoDocumentosRouteImport } from './routes/_app/cumplimiento/documentos'
+import { Route as AppCumplimientoContratosRouteImport } from './routes/_app/cumplimiento/contratos'
+import { Route as AppCumplimientoAlertasRouteImport } from './routes/_app/cumplimiento/alertas'
 
 const MarcarRoute = MarcarRouteImport.update({
   id: '/marcar',
@@ -174,11 +178,37 @@ const AppFinanzasCostosRoute = AppFinanzasCostosRouteImport.update({
   path: '/finanzas/costos',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCumplimientoJornadaRoute = AppCumplimientoJornadaRouteImport.update({
+  id: '/cumplimiento/jornada',
+  path: '/cumplimiento/jornada',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCumplimientoDocumentosRoute =
+  AppCumplimientoDocumentosRouteImport.update({
+    id: '/cumplimiento/documentos',
+    path: '/cumplimiento/documentos',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppCumplimientoContratosRoute =
+  AppCumplimientoContratosRouteImport.update({
+    id: '/cumplimiento/contratos',
+    path: '/cumplimiento/contratos',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppCumplimientoAlertasRoute = AppCumplimientoAlertasRouteImport.update({
+  id: '/cumplimiento/alertas',
+  path: '/cumplimiento/alertas',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
+  '/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
+  '/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
+  '/cumplimiento/documentos': typeof AppCumplimientoDocumentosRoute
+  '/cumplimiento/jornada': typeof AppCumplimientoJornadaRoute
   '/finanzas/costos': typeof AppFinanzasCostosRoute
   '/finanzas/dashboard': typeof AppFinanzasDashboardRoute
   '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
@@ -207,6 +237,10 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/': typeof AppIndexRoute
+  '/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
+  '/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
+  '/cumplimiento/documentos': typeof AppCumplimientoDocumentosRoute
+  '/cumplimiento/jornada': typeof AppCumplimientoJornadaRoute
   '/finanzas/costos': typeof AppFinanzasCostosRoute
   '/finanzas/dashboard': typeof AppFinanzasDashboardRoute
   '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
@@ -237,6 +271,10 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
+  '/_app/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
+  '/_app/cumplimiento/documentos': typeof AppCumplimientoDocumentosRoute
+  '/_app/cumplimiento/jornada': typeof AppCumplimientoJornadaRoute
   '/_app/finanzas/costos': typeof AppFinanzasCostosRoute
   '/_app/finanzas/dashboard': typeof AppFinanzasDashboardRoute
   '/_app/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
@@ -267,6 +305,10 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/marcar'
+    | '/cumplimiento/alertas'
+    | '/cumplimiento/contratos'
+    | '/cumplimiento/documentos'
+    | '/cumplimiento/jornada'
     | '/finanzas/costos'
     | '/finanzas/dashboard'
     | '/finanzas/flujo-caja'
@@ -295,6 +337,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/'
+    | '/cumplimiento/alertas'
+    | '/cumplimiento/contratos'
+    | '/cumplimiento/documentos'
+    | '/cumplimiento/jornada'
     | '/finanzas/costos'
     | '/finanzas/dashboard'
     | '/finanzas/flujo-caja'
@@ -324,6 +370,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/_app/'
+    | '/_app/cumplimiento/alertas'
+    | '/_app/cumplimiento/contratos'
+    | '/_app/cumplimiento/documentos'
+    | '/_app/cumplimiento/jornada'
     | '/_app/finanzas/costos'
     | '/_app/finanzas/dashboard'
     | '/_app/finanzas/flujo-caja'
@@ -547,11 +597,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFinanzasCostosRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/cumplimiento/jornada': {
+      id: '/_app/cumplimiento/jornada'
+      path: '/cumplimiento/jornada'
+      fullPath: '/cumplimiento/jornada'
+      preLoaderRoute: typeof AppCumplimientoJornadaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/cumplimiento/documentos': {
+      id: '/_app/cumplimiento/documentos'
+      path: '/cumplimiento/documentos'
+      fullPath: '/cumplimiento/documentos'
+      preLoaderRoute: typeof AppCumplimientoDocumentosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/cumplimiento/contratos': {
+      id: '/_app/cumplimiento/contratos'
+      path: '/cumplimiento/contratos'
+      fullPath: '/cumplimiento/contratos'
+      preLoaderRoute: typeof AppCumplimientoContratosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/cumplimiento/alertas': {
+      id: '/_app/cumplimiento/alertas'
+      path: '/cumplimiento/alertas'
+      fullPath: '/cumplimiento/alertas'
+      preLoaderRoute: typeof AppCumplimientoAlertasRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
+  AppCumplimientoAlertasRoute: typeof AppCumplimientoAlertasRoute
+  AppCumplimientoContratosRoute: typeof AppCumplimientoContratosRoute
+  AppCumplimientoDocumentosRoute: typeof AppCumplimientoDocumentosRoute
+  AppCumplimientoJornadaRoute: typeof AppCumplimientoJornadaRoute
   AppFinanzasCostosRoute: typeof AppFinanzasCostosRoute
   AppFinanzasDashboardRoute: typeof AppFinanzasDashboardRoute
   AppFinanzasFlujoCajaRoute: typeof AppFinanzasFlujoCajaRoute
@@ -578,6 +660,10 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
+  AppCumplimientoAlertasRoute: AppCumplimientoAlertasRoute,
+  AppCumplimientoContratosRoute: AppCumplimientoContratosRoute,
+  AppCumplimientoDocumentosRoute: AppCumplimientoDocumentosRoute,
+  AppCumplimientoJornadaRoute: AppCumplimientoJornadaRoute,
   AppFinanzasCostosRoute: AppFinanzasCostosRoute,
   AppFinanzasDashboardRoute: AppFinanzasDashboardRoute,
   AppFinanzasFlujoCajaRoute: AppFinanzasFlujoCajaRoute,
