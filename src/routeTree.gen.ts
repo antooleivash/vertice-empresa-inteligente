@@ -19,6 +19,17 @@ import { Route as AppRrhhHorasExtrasRouteImport } from './routes/_app/rrhh/horas
 import { Route as AppRrhhEmpleadosRouteImport } from './routes/_app/rrhh/empleados'
 import { Route as AppRrhhCartasRouteImport } from './routes/_app/rrhh/cartas'
 import { Route as AppRrhhAsistenciaRouteImport } from './routes/_app/rrhh/asistencia'
+import { Route as AppReclutamientoOfertasRouteImport } from './routes/_app/reclutamiento/ofertas'
+import { Route as AppReclutamientoCandidatosRouteImport } from './routes/_app/reclutamiento/candidatos'
+import { Route as AppOperacionesTurnosRouteImport } from './routes/_app/operaciones/turnos'
+import { Route as AppOperacionesProductividadRouteImport } from './routes/_app/operaciones/productividad'
+import { Route as AppMarketplaceServiciosRouteImport } from './routes/_app/marketplace/servicios'
+import { Route as AppMarketplaceProveedoresRouteImport } from './routes/_app/marketplace/proveedores'
+import { Route as AppMarketingContenidoRouteImport } from './routes/_app/marketing/contenido'
+import { Route as AppMarketingCampanasRouteImport } from './routes/_app/marketing/campanas'
+import { Route as AppIaPrediccionesRouteImport } from './routes/_app/ia/predicciones'
+import { Route as AppIaAlertasRouteImport } from './routes/_app/ia/alertas'
+import { Route as AppFinanzasPresupuestoRouteImport } from './routes/_app/finanzas/presupuesto'
 import { Route as AppFinanzasFlujoCajaRouteImport } from './routes/_app/finanzas/flujo-caja'
 import { Route as AppFinanzasCostosRouteImport } from './routes/_app/finanzas/costos'
 
@@ -71,6 +82,64 @@ const AppRrhhAsistenciaRoute = AppRrhhAsistenciaRouteImport.update({
   path: '/rrhh/asistencia',
   getParentRoute: () => AppRoute,
 } as any)
+const AppReclutamientoOfertasRoute = AppReclutamientoOfertasRouteImport.update({
+  id: '/reclutamiento/ofertas',
+  path: '/reclutamiento/ofertas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReclutamientoCandidatosRoute =
+  AppReclutamientoCandidatosRouteImport.update({
+    id: '/reclutamiento/candidatos',
+    path: '/reclutamiento/candidatos',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppOperacionesTurnosRoute = AppOperacionesTurnosRouteImport.update({
+  id: '/operaciones/turnos',
+  path: '/operaciones/turnos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOperacionesProductividadRoute =
+  AppOperacionesProductividadRouteImport.update({
+    id: '/operaciones/productividad',
+    path: '/operaciones/productividad',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppMarketplaceServiciosRoute = AppMarketplaceServiciosRouteImport.update({
+  id: '/marketplace/servicios',
+  path: '/marketplace/servicios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketplaceProveedoresRoute =
+  AppMarketplaceProveedoresRouteImport.update({
+    id: '/marketplace/proveedores',
+    path: '/marketplace/proveedores',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppMarketingContenidoRoute = AppMarketingContenidoRouteImport.update({
+  id: '/marketing/contenido',
+  path: '/marketing/contenido',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketingCampanasRoute = AppMarketingCampanasRouteImport.update({
+  id: '/marketing/campanas',
+  path: '/marketing/campanas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIaPrediccionesRoute = AppIaPrediccionesRouteImport.update({
+  id: '/ia/predicciones',
+  path: '/ia/predicciones',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIaAlertasRoute = AppIaAlertasRouteImport.update({
+  id: '/ia/alertas',
+  path: '/ia/alertas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanzasPresupuestoRoute = AppFinanzasPresupuestoRouteImport.update({
+  id: '/finanzas/presupuesto',
+  path: '/finanzas/presupuesto',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppFinanzasFlujoCajaRoute = AppFinanzasFlujoCajaRouteImport.update({
   id: '/finanzas/flujo-caja',
   path: '/finanzas/flujo-caja',
@@ -87,6 +156,17 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/finanzas/costos': typeof AppFinanzasCostosRoute
   '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
+  '/finanzas/presupuesto': typeof AppFinanzasPresupuestoRoute
+  '/ia/alertas': typeof AppIaAlertasRoute
+  '/ia/predicciones': typeof AppIaPrediccionesRoute
+  '/marketing/campanas': typeof AppMarketingCampanasRoute
+  '/marketing/contenido': typeof AppMarketingContenidoRoute
+  '/marketplace/proveedores': typeof AppMarketplaceProveedoresRoute
+  '/marketplace/servicios': typeof AppMarketplaceServiciosRoute
+  '/operaciones/productividad': typeof AppOperacionesProductividadRoute
+  '/operaciones/turnos': typeof AppOperacionesTurnosRoute
+  '/reclutamiento/candidatos': typeof AppReclutamientoCandidatosRoute
+  '/reclutamiento/ofertas': typeof AppReclutamientoOfertasRoute
   '/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
   '/rrhh/cartas': typeof AppRrhhCartasRoute
   '/rrhh/empleados': typeof AppRrhhEmpleadosRoute
@@ -100,6 +180,17 @@ export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/finanzas/costos': typeof AppFinanzasCostosRoute
   '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
+  '/finanzas/presupuesto': typeof AppFinanzasPresupuestoRoute
+  '/ia/alertas': typeof AppIaAlertasRoute
+  '/ia/predicciones': typeof AppIaPrediccionesRoute
+  '/marketing/campanas': typeof AppMarketingCampanasRoute
+  '/marketing/contenido': typeof AppMarketingContenidoRoute
+  '/marketplace/proveedores': typeof AppMarketplaceProveedoresRoute
+  '/marketplace/servicios': typeof AppMarketplaceServiciosRoute
+  '/operaciones/productividad': typeof AppOperacionesProductividadRoute
+  '/operaciones/turnos': typeof AppOperacionesTurnosRoute
+  '/reclutamiento/candidatos': typeof AppReclutamientoCandidatosRoute
+  '/reclutamiento/ofertas': typeof AppReclutamientoOfertasRoute
   '/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
   '/rrhh/cartas': typeof AppRrhhCartasRoute
   '/rrhh/empleados': typeof AppRrhhEmpleadosRoute
@@ -115,6 +206,17 @@ export interface FileRoutesById {
   '/_app/': typeof AppIndexRoute
   '/_app/finanzas/costos': typeof AppFinanzasCostosRoute
   '/_app/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
+  '/_app/finanzas/presupuesto': typeof AppFinanzasPresupuestoRoute
+  '/_app/ia/alertas': typeof AppIaAlertasRoute
+  '/_app/ia/predicciones': typeof AppIaPrediccionesRoute
+  '/_app/marketing/campanas': typeof AppMarketingCampanasRoute
+  '/_app/marketing/contenido': typeof AppMarketingContenidoRoute
+  '/_app/marketplace/proveedores': typeof AppMarketplaceProveedoresRoute
+  '/_app/marketplace/servicios': typeof AppMarketplaceServiciosRoute
+  '/_app/operaciones/productividad': typeof AppOperacionesProductividadRoute
+  '/_app/operaciones/turnos': typeof AppOperacionesTurnosRoute
+  '/_app/reclutamiento/candidatos': typeof AppReclutamientoCandidatosRoute
+  '/_app/reclutamiento/ofertas': typeof AppReclutamientoOfertasRoute
   '/_app/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
   '/_app/rrhh/cartas': typeof AppRrhhCartasRoute
   '/_app/rrhh/empleados': typeof AppRrhhEmpleadosRoute
@@ -130,6 +232,17 @@ export interface FileRouteTypes {
     | '/login'
     | '/finanzas/costos'
     | '/finanzas/flujo-caja'
+    | '/finanzas/presupuesto'
+    | '/ia/alertas'
+    | '/ia/predicciones'
+    | '/marketing/campanas'
+    | '/marketing/contenido'
+    | '/marketplace/proveedores'
+    | '/marketplace/servicios'
+    | '/operaciones/productividad'
+    | '/operaciones/turnos'
+    | '/reclutamiento/candidatos'
+    | '/reclutamiento/ofertas'
     | '/rrhh/asistencia'
     | '/rrhh/cartas'
     | '/rrhh/empleados'
@@ -143,6 +256,17 @@ export interface FileRouteTypes {
     | '/'
     | '/finanzas/costos'
     | '/finanzas/flujo-caja'
+    | '/finanzas/presupuesto'
+    | '/ia/alertas'
+    | '/ia/predicciones'
+    | '/marketing/campanas'
+    | '/marketing/contenido'
+    | '/marketplace/proveedores'
+    | '/marketplace/servicios'
+    | '/operaciones/productividad'
+    | '/operaciones/turnos'
+    | '/reclutamiento/candidatos'
+    | '/reclutamiento/ofertas'
     | '/rrhh/asistencia'
     | '/rrhh/cartas'
     | '/rrhh/empleados'
@@ -157,6 +281,17 @@ export interface FileRouteTypes {
     | '/_app/'
     | '/_app/finanzas/costos'
     | '/_app/finanzas/flujo-caja'
+    | '/_app/finanzas/presupuesto'
+    | '/_app/ia/alertas'
+    | '/_app/ia/predicciones'
+    | '/_app/marketing/campanas'
+    | '/_app/marketing/contenido'
+    | '/_app/marketplace/proveedores'
+    | '/_app/marketplace/servicios'
+    | '/_app/operaciones/productividad'
+    | '/_app/operaciones/turnos'
+    | '/_app/reclutamiento/candidatos'
+    | '/_app/reclutamiento/ofertas'
     | '/_app/rrhh/asistencia'
     | '/_app/rrhh/cartas'
     | '/_app/rrhh/empleados'
@@ -244,6 +379,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRrhhAsistenciaRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/reclutamiento/ofertas': {
+      id: '/_app/reclutamiento/ofertas'
+      path: '/reclutamiento/ofertas'
+      fullPath: '/reclutamiento/ofertas'
+      preLoaderRoute: typeof AppReclutamientoOfertasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reclutamiento/candidatos': {
+      id: '/_app/reclutamiento/candidatos'
+      path: '/reclutamiento/candidatos'
+      fullPath: '/reclutamiento/candidatos'
+      preLoaderRoute: typeof AppReclutamientoCandidatosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/operaciones/turnos': {
+      id: '/_app/operaciones/turnos'
+      path: '/operaciones/turnos'
+      fullPath: '/operaciones/turnos'
+      preLoaderRoute: typeof AppOperacionesTurnosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/operaciones/productividad': {
+      id: '/_app/operaciones/productividad'
+      path: '/operaciones/productividad'
+      fullPath: '/operaciones/productividad'
+      preLoaderRoute: typeof AppOperacionesProductividadRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/marketplace/servicios': {
+      id: '/_app/marketplace/servicios'
+      path: '/marketplace/servicios'
+      fullPath: '/marketplace/servicios'
+      preLoaderRoute: typeof AppMarketplaceServiciosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/marketplace/proveedores': {
+      id: '/_app/marketplace/proveedores'
+      path: '/marketplace/proveedores'
+      fullPath: '/marketplace/proveedores'
+      preLoaderRoute: typeof AppMarketplaceProveedoresRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/marketing/contenido': {
+      id: '/_app/marketing/contenido'
+      path: '/marketing/contenido'
+      fullPath: '/marketing/contenido'
+      preLoaderRoute: typeof AppMarketingContenidoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/marketing/campanas': {
+      id: '/_app/marketing/campanas'
+      path: '/marketing/campanas'
+      fullPath: '/marketing/campanas'
+      preLoaderRoute: typeof AppMarketingCampanasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ia/predicciones': {
+      id: '/_app/ia/predicciones'
+      path: '/ia/predicciones'
+      fullPath: '/ia/predicciones'
+      preLoaderRoute: typeof AppIaPrediccionesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ia/alertas': {
+      id: '/_app/ia/alertas'
+      path: '/ia/alertas'
+      fullPath: '/ia/alertas'
+      preLoaderRoute: typeof AppIaAlertasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/finanzas/presupuesto': {
+      id: '/_app/finanzas/presupuesto'
+      path: '/finanzas/presupuesto'
+      fullPath: '/finanzas/presupuesto'
+      preLoaderRoute: typeof AppFinanzasPresupuestoRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/finanzas/flujo-caja': {
       id: '/_app/finanzas/flujo-caja'
       path: '/finanzas/flujo-caja'
@@ -265,6 +477,17 @@ interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppFinanzasCostosRoute: typeof AppFinanzasCostosRoute
   AppFinanzasFlujoCajaRoute: typeof AppFinanzasFlujoCajaRoute
+  AppFinanzasPresupuestoRoute: typeof AppFinanzasPresupuestoRoute
+  AppIaAlertasRoute: typeof AppIaAlertasRoute
+  AppIaPrediccionesRoute: typeof AppIaPrediccionesRoute
+  AppMarketingCampanasRoute: typeof AppMarketingCampanasRoute
+  AppMarketingContenidoRoute: typeof AppMarketingContenidoRoute
+  AppMarketplaceProveedoresRoute: typeof AppMarketplaceProveedoresRoute
+  AppMarketplaceServiciosRoute: typeof AppMarketplaceServiciosRoute
+  AppOperacionesProductividadRoute: typeof AppOperacionesProductividadRoute
+  AppOperacionesTurnosRoute: typeof AppOperacionesTurnosRoute
+  AppReclutamientoCandidatosRoute: typeof AppReclutamientoCandidatosRoute
+  AppReclutamientoOfertasRoute: typeof AppReclutamientoOfertasRoute
   AppRrhhAsistenciaRoute: typeof AppRrhhAsistenciaRoute
   AppRrhhCartasRoute: typeof AppRrhhCartasRoute
   AppRrhhEmpleadosRoute: typeof AppRrhhEmpleadosRoute
@@ -277,6 +500,17 @@ const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppFinanzasCostosRoute: AppFinanzasCostosRoute,
   AppFinanzasFlujoCajaRoute: AppFinanzasFlujoCajaRoute,
+  AppFinanzasPresupuestoRoute: AppFinanzasPresupuestoRoute,
+  AppIaAlertasRoute: AppIaAlertasRoute,
+  AppIaPrediccionesRoute: AppIaPrediccionesRoute,
+  AppMarketingCampanasRoute: AppMarketingCampanasRoute,
+  AppMarketingContenidoRoute: AppMarketingContenidoRoute,
+  AppMarketplaceProveedoresRoute: AppMarketplaceProveedoresRoute,
+  AppMarketplaceServiciosRoute: AppMarketplaceServiciosRoute,
+  AppOperacionesProductividadRoute: AppOperacionesProductividadRoute,
+  AppOperacionesTurnosRoute: AppOperacionesTurnosRoute,
+  AppReclutamientoCandidatosRoute: AppReclutamientoCandidatosRoute,
+  AppReclutamientoOfertasRoute: AppReclutamientoOfertasRoute,
   AppRrhhAsistenciaRoute: AppRrhhAsistenciaRoute,
   AppRrhhCartasRoute: AppRrhhCartasRoute,
   AppRrhhEmpleadosRoute: AppRrhhEmpleadosRoute,
