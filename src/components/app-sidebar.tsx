@@ -5,6 +5,7 @@ import {
   Wallet, TrendingUp, Target, Activity, Gauge, Sparkles, Bell, Megaphone,
   Briefcase, UserSearch, Store, Truck, LogOut, Building2, BarChart3, ArrowDownCircle, ArrowUpCircle,
   Shield, FileSignature, FileCheck2, ShieldAlert, Settings, Package, Scale, ShoppingCart, Lock, Upload, Landmark,
+  Calendar, Contact,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useEmpresa } from "@/hooks/use-empresa";
@@ -43,6 +44,13 @@ const sections: Section[] = [
       { to: "/simulador", label: "Simulador financiero", icon: TrendingUp, module: "simulador" },
       { to: "/impuestos", label: "Impuestos (IVA / F29)", icon: Landmark, module: "impuestos" },
       { to: "/balance", label: "Balance (Activos y Pasivos)", icon: Scale, module: "balance" },
+    ],
+  },
+  {
+    title: "Gestión",
+    items: [
+      { to: "/agenda", label: "Agenda y calendario", icon: Calendar, module: "agenda" },
+      { to: "/clientes", label: "Clientes y CRM", icon: Contact, module: "clientes" },
     ],
   },
   {
