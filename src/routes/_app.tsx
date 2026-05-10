@@ -19,7 +19,7 @@ function AppLayout() {
 
   useEffect(() => {
     if (!loading && !empLoading && user && !isAdmin) {
-      navigate({ to: "/portal" });
+      navigate({ to: "/portal/asistencia" });
     }
   }, [loading, empLoading, user, isAdmin, navigate]);
 
