@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as PrintTipoIdRouteImport } from './routes/print.$tipo.$id'
 import { Route as AppRrhhVacacionesRouteImport } from './routes/_app/rrhh/vacaciones'
 import { Route as AppRrhhLiquidacionesRouteImport } from './routes/_app/rrhh/liquidaciones'
 import { Route as AppRrhhHorasExtrasRouteImport } from './routes/_app/rrhh/horas-extras'
@@ -32,6 +33,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const PrintTipoIdRoute = PrintTipoIdRouteImport.update({
+  id: '/print/$tipo/$id',
+  path: '/print/$tipo/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppRrhhVacacionesRoute = AppRrhhVacacionesRouteImport.update({
   id: '/rrhh/vacaciones',
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/rrhh/horas-extras': typeof AppRrhhHorasExtrasRoute
   '/rrhh/liquidaciones': typeof AppRrhhLiquidacionesRoute
   '/rrhh/vacaciones': typeof AppRrhhVacacionesRoute
+  '/print/$tipo/$id': typeof PrintTipoIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/rrhh/horas-extras': typeof AppRrhhHorasExtrasRoute
   '/rrhh/liquidaciones': typeof AppRrhhLiquidacionesRoute
   '/rrhh/vacaciones': typeof AppRrhhVacacionesRoute
+  '/print/$tipo/$id': typeof PrintTipoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/_app/rrhh/horas-extras': typeof AppRrhhHorasExtrasRoute
   '/_app/rrhh/liquidaciones': typeof AppRrhhLiquidacionesRoute
   '/_app/rrhh/vacaciones': typeof AppRrhhVacacionesRoute
+  '/print/$tipo/$id': typeof PrintTipoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/rrhh/horas-extras'
     | '/rrhh/liquidaciones'
     | '/rrhh/vacaciones'
+    | '/print/$tipo/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/rrhh/horas-extras'
     | '/rrhh/liquidaciones'
     | '/rrhh/vacaciones'
+    | '/print/$tipo/$id'
   id:
     | '__root__'
     | '/_app'
@@ -128,11 +139,13 @@ export interface FileRouteTypes {
     | '/_app/rrhh/horas-extras'
     | '/_app/rrhh/liquidaciones'
     | '/_app/rrhh/vacaciones'
+    | '/print/$tipo/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  PrintTipoIdRoute: typeof PrintTipoIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -157,6 +170,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/print/$tipo/$id': {
+      id: '/print/$tipo/$id'
+      path: '/print/$tipo/$id'
+      fullPath: '/print/$tipo/$id'
+      preLoaderRoute: typeof PrintTipoIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_app/rrhh/vacaciones': {
       id: '/_app/rrhh/vacaciones'
@@ -228,6 +248,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  PrintTipoIdRoute: PrintTipoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
