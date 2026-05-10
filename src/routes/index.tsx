@@ -6,7 +6,9 @@ import {
   Users, Wallet, Activity, Brain, ShieldCheck, Smartphone, UserSearch,
   Check, Sparkles, LineChart, ShieldQuestion, Building2, Truck, Anchor,
   ShoppingBag, HardHat, Factory, ArrowRight, Mail,
+  Scale, MapPin, MessageCircle, Link as LinkIcon, BarChart,
 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -120,6 +122,9 @@ function Landing() {
           </div>
         </div>
       </section>
+
+      {/* DIFERENCIADORES */}
+      <DiferenciadoresSection />
 
       {/* MÓDULOS */}
       <section id="modulos" className="mx-auto max-w-6xl px-6 py-24">
