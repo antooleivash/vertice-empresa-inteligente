@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { StatusPill } from "@/components/status-pill";
 import { Plus, Trash2, Check, X } from "lucide-react";
 import { toast } from "sonner";
 
@@ -127,7 +128,7 @@ function VacacionesPage() {
                 <TableCell>{formatDate(v.fecha_inicio)}</TableCell>
                 <TableCell>{formatDate(v.fecha_fin)}</TableCell>
                 <TableCell>{v.dias}</TableCell>
-                <TableCell><Badge className={tone(v.estado)}>{v.estado}</Badge></TableCell>
+                <TableCell><StatusPill label={v.estado} /></TableCell>
                 <TableCell className="text-right">
                   {v.estado === "pendiente" && (
                     <>
