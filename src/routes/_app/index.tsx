@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Empleado, Asistencia, Liquidacion, HoraExtra } from "@/lib/domain";
 import { formatCLP } from "@/lib/domain";
+import { detectarAlertas, alertaTone, type AlertaIA } from "@/lib/ia-engine";
 import { Card } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Users, Clock, AlertTriangle, Wallet } from "lucide-react";
