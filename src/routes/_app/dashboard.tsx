@@ -13,7 +13,7 @@ import {
   Tooltip, XAxis, YAxis, Legend,
 } from "recharts";
 
-export const Route = createFileRoute("/_app/")({ component: Dashboard });
+export const Route = createFileRoute("/_app/dashboard")({ component: Dashboard });
 
 type KPIKey = "empleados" | "asistencia" | "alertas" | "costo";
 

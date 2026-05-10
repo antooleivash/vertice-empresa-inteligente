@@ -13,7 +13,7 @@ type Item = { to: string; label: string; icon: React.ComponentType<{ className?:
 type Section = { title: string; items: Item[] };
 
 const sections: Section[] = [
-  { title: "General", items: [{ to: "/", label: "Dashboard gerencial", icon: LayoutDashboard }] },
+  { title: "General", items: [{ to: "/dashboard", label: "Dashboard gerencial", icon: LayoutDashboard }] },
   {
     title: "RRHH",
     items: [
