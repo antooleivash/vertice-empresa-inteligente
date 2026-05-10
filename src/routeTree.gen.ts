@@ -9,51 +9,533 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as PrintTipoIdRouteImport } from './routes/print.$tipo.$id'
+import { Route as AppRrhhVacacionesRouteImport } from './routes/_app/rrhh/vacaciones'
+import { Route as AppRrhhLiquidacionesRouteImport } from './routes/_app/rrhh/liquidaciones'
+import { Route as AppRrhhHorasExtrasRouteImport } from './routes/_app/rrhh/horas-extras'
+import { Route as AppRrhhEmpleadosRouteImport } from './routes/_app/rrhh/empleados'
+import { Route as AppRrhhCartasRouteImport } from './routes/_app/rrhh/cartas'
+import { Route as AppRrhhAsistenciaRouteImport } from './routes/_app/rrhh/asistencia'
+import { Route as AppReclutamientoOfertasRouteImport } from './routes/_app/reclutamiento/ofertas'
+import { Route as AppReclutamientoCandidatosRouteImport } from './routes/_app/reclutamiento/candidatos'
+import { Route as AppOperacionesTurnosRouteImport } from './routes/_app/operaciones/turnos'
+import { Route as AppOperacionesProductividadRouteImport } from './routes/_app/operaciones/productividad'
+import { Route as AppMarketplaceServiciosRouteImport } from './routes/_app/marketplace/servicios'
+import { Route as AppMarketplaceProveedoresRouteImport } from './routes/_app/marketplace/proveedores'
+import { Route as AppMarketingContenidoRouteImport } from './routes/_app/marketing/contenido'
+import { Route as AppMarketingCampanasRouteImport } from './routes/_app/marketing/campanas'
+import { Route as AppIaPrediccionesRouteImport } from './routes/_app/ia/predicciones'
+import { Route as AppIaAlertasRouteImport } from './routes/_app/ia/alertas'
+import { Route as AppFinanzasPresupuestoRouteImport } from './routes/_app/finanzas/presupuesto'
+import { Route as AppFinanzasFlujoCajaRouteImport } from './routes/_app/finanzas/flujo-caja'
+import { Route as AppFinanzasCostosRouteImport } from './routes/_app/finanzas/costos'
 
-const IndexRoute = IndexRouteImport.update({
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const PrintTipoIdRoute = PrintTipoIdRouteImport.update({
+  id: '/print/$tipo/$id',
+  path: '/print/$tipo/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppRrhhVacacionesRoute = AppRrhhVacacionesRouteImport.update({
+  id: '/rrhh/vacaciones',
+  path: '/rrhh/vacaciones',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRrhhLiquidacionesRoute = AppRrhhLiquidacionesRouteImport.update({
+  id: '/rrhh/liquidaciones',
+  path: '/rrhh/liquidaciones',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRrhhHorasExtrasRoute = AppRrhhHorasExtrasRouteImport.update({
+  id: '/rrhh/horas-extras',
+  path: '/rrhh/horas-extras',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRrhhEmpleadosRoute = AppRrhhEmpleadosRouteImport.update({
+  id: '/rrhh/empleados',
+  path: '/rrhh/empleados',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRrhhCartasRoute = AppRrhhCartasRouteImport.update({
+  id: '/rrhh/cartas',
+  path: '/rrhh/cartas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRrhhAsistenciaRoute = AppRrhhAsistenciaRouteImport.update({
+  id: '/rrhh/asistencia',
+  path: '/rrhh/asistencia',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReclutamientoOfertasRoute = AppReclutamientoOfertasRouteImport.update({
+  id: '/reclutamiento/ofertas',
+  path: '/reclutamiento/ofertas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReclutamientoCandidatosRoute =
+  AppReclutamientoCandidatosRouteImport.update({
+    id: '/reclutamiento/candidatos',
+    path: '/reclutamiento/candidatos',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppOperacionesTurnosRoute = AppOperacionesTurnosRouteImport.update({
+  id: '/operaciones/turnos',
+  path: '/operaciones/turnos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOperacionesProductividadRoute =
+  AppOperacionesProductividadRouteImport.update({
+    id: '/operaciones/productividad',
+    path: '/operaciones/productividad',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppMarketplaceServiciosRoute = AppMarketplaceServiciosRouteImport.update({
+  id: '/marketplace/servicios',
+  path: '/marketplace/servicios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketplaceProveedoresRoute =
+  AppMarketplaceProveedoresRouteImport.update({
+    id: '/marketplace/proveedores',
+    path: '/marketplace/proveedores',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppMarketingContenidoRoute = AppMarketingContenidoRouteImport.update({
+  id: '/marketing/contenido',
+  path: '/marketing/contenido',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketingCampanasRoute = AppMarketingCampanasRouteImport.update({
+  id: '/marketing/campanas',
+  path: '/marketing/campanas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIaPrediccionesRoute = AppIaPrediccionesRouteImport.update({
+  id: '/ia/predicciones',
+  path: '/ia/predicciones',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIaAlertasRoute = AppIaAlertasRouteImport.update({
+  id: '/ia/alertas',
+  path: '/ia/alertas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanzasPresupuestoRoute = AppFinanzasPresupuestoRouteImport.update({
+  id: '/finanzas/presupuesto',
+  path: '/finanzas/presupuesto',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanzasFlujoCajaRoute = AppFinanzasFlujoCajaRouteImport.update({
+  id: '/finanzas/flujo-caja',
+  path: '/finanzas/flujo-caja',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanzasCostosRoute = AppFinanzasCostosRouteImport.update({
+  id: '/finanzas/costos',
+  path: '/finanzas/costos',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AppIndexRoute
+  '/login': typeof LoginRoute
+  '/finanzas/costos': typeof AppFinanzasCostosRoute
+  '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
+  '/finanzas/presupuesto': typeof AppFinanzasPresupuestoRoute
+  '/ia/alertas': typeof AppIaAlertasRoute
+  '/ia/predicciones': typeof AppIaPrediccionesRoute
+  '/marketing/campanas': typeof AppMarketingCampanasRoute
+  '/marketing/contenido': typeof AppMarketingContenidoRoute
+  '/marketplace/proveedores': typeof AppMarketplaceProveedoresRoute
+  '/marketplace/servicios': typeof AppMarketplaceServiciosRoute
+  '/operaciones/productividad': typeof AppOperacionesProductividadRoute
+  '/operaciones/turnos': typeof AppOperacionesTurnosRoute
+  '/reclutamiento/candidatos': typeof AppReclutamientoCandidatosRoute
+  '/reclutamiento/ofertas': typeof AppReclutamientoOfertasRoute
+  '/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
+  '/rrhh/cartas': typeof AppRrhhCartasRoute
+  '/rrhh/empleados': typeof AppRrhhEmpleadosRoute
+  '/rrhh/horas-extras': typeof AppRrhhHorasExtrasRoute
+  '/rrhh/liquidaciones': typeof AppRrhhLiquidacionesRoute
+  '/rrhh/vacaciones': typeof AppRrhhVacacionesRoute
+  '/print/$tipo/$id': typeof PrintTipoIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/': typeof AppIndexRoute
+  '/finanzas/costos': typeof AppFinanzasCostosRoute
+  '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
+  '/finanzas/presupuesto': typeof AppFinanzasPresupuestoRoute
+  '/ia/alertas': typeof AppIaAlertasRoute
+  '/ia/predicciones': typeof AppIaPrediccionesRoute
+  '/marketing/campanas': typeof AppMarketingCampanasRoute
+  '/marketing/contenido': typeof AppMarketingContenidoRoute
+  '/marketplace/proveedores': typeof AppMarketplaceProveedoresRoute
+  '/marketplace/servicios': typeof AppMarketplaceServiciosRoute
+  '/operaciones/productividad': typeof AppOperacionesProductividadRoute
+  '/operaciones/turnos': typeof AppOperacionesTurnosRoute
+  '/reclutamiento/candidatos': typeof AppReclutamientoCandidatosRoute
+  '/reclutamiento/ofertas': typeof AppReclutamientoOfertasRoute
+  '/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
+  '/rrhh/cartas': typeof AppRrhhCartasRoute
+  '/rrhh/empleados': typeof AppRrhhEmpleadosRoute
+  '/rrhh/horas-extras': typeof AppRrhhHorasExtrasRoute
+  '/rrhh/liquidaciones': typeof AppRrhhLiquidacionesRoute
+  '/rrhh/vacaciones': typeof AppRrhhVacacionesRoute
+  '/print/$tipo/$id': typeof PrintTipoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/finanzas/costos': typeof AppFinanzasCostosRoute
+  '/_app/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
+  '/_app/finanzas/presupuesto': typeof AppFinanzasPresupuestoRoute
+  '/_app/ia/alertas': typeof AppIaAlertasRoute
+  '/_app/ia/predicciones': typeof AppIaPrediccionesRoute
+  '/_app/marketing/campanas': typeof AppMarketingCampanasRoute
+  '/_app/marketing/contenido': typeof AppMarketingContenidoRoute
+  '/_app/marketplace/proveedores': typeof AppMarketplaceProveedoresRoute
+  '/_app/marketplace/servicios': typeof AppMarketplaceServiciosRoute
+  '/_app/operaciones/productividad': typeof AppOperacionesProductividadRoute
+  '/_app/operaciones/turnos': typeof AppOperacionesTurnosRoute
+  '/_app/reclutamiento/candidatos': typeof AppReclutamientoCandidatosRoute
+  '/_app/reclutamiento/ofertas': typeof AppReclutamientoOfertasRoute
+  '/_app/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
+  '/_app/rrhh/cartas': typeof AppRrhhCartasRoute
+  '/_app/rrhh/empleados': typeof AppRrhhEmpleadosRoute
+  '/_app/rrhh/horas-extras': typeof AppRrhhHorasExtrasRoute
+  '/_app/rrhh/liquidaciones': typeof AppRrhhLiquidacionesRoute
+  '/_app/rrhh/vacaciones': typeof AppRrhhVacacionesRoute
+  '/print/$tipo/$id': typeof PrintTipoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/finanzas/costos'
+    | '/finanzas/flujo-caja'
+    | '/finanzas/presupuesto'
+    | '/ia/alertas'
+    | '/ia/predicciones'
+    | '/marketing/campanas'
+    | '/marketing/contenido'
+    | '/marketplace/proveedores'
+    | '/marketplace/servicios'
+    | '/operaciones/productividad'
+    | '/operaciones/turnos'
+    | '/reclutamiento/candidatos'
+    | '/reclutamiento/ofertas'
+    | '/rrhh/asistencia'
+    | '/rrhh/cartas'
+    | '/rrhh/empleados'
+    | '/rrhh/horas-extras'
+    | '/rrhh/liquidaciones'
+    | '/rrhh/vacaciones'
+    | '/print/$tipo/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/login'
+    | '/'
+    | '/finanzas/costos'
+    | '/finanzas/flujo-caja'
+    | '/finanzas/presupuesto'
+    | '/ia/alertas'
+    | '/ia/predicciones'
+    | '/marketing/campanas'
+    | '/marketing/contenido'
+    | '/marketplace/proveedores'
+    | '/marketplace/servicios'
+    | '/operaciones/productividad'
+    | '/operaciones/turnos'
+    | '/reclutamiento/candidatos'
+    | '/reclutamiento/ofertas'
+    | '/rrhh/asistencia'
+    | '/rrhh/cartas'
+    | '/rrhh/empleados'
+    | '/rrhh/horas-extras'
+    | '/rrhh/liquidaciones'
+    | '/rrhh/vacaciones'
+    | '/print/$tipo/$id'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/login'
+    | '/_app/'
+    | '/_app/finanzas/costos'
+    | '/_app/finanzas/flujo-caja'
+    | '/_app/finanzas/presupuesto'
+    | '/_app/ia/alertas'
+    | '/_app/ia/predicciones'
+    | '/_app/marketing/campanas'
+    | '/_app/marketing/contenido'
+    | '/_app/marketplace/proveedores'
+    | '/_app/marketplace/servicios'
+    | '/_app/operaciones/productividad'
+    | '/_app/operaciones/turnos'
+    | '/_app/reclutamiento/candidatos'
+    | '/_app/reclutamiento/ofertas'
+    | '/_app/rrhh/asistencia'
+    | '/_app/rrhh/cartas'
+    | '/_app/rrhh/empleados'
+    | '/_app/rrhh/horas-extras'
+    | '/_app/rrhh/liquidaciones'
+    | '/_app/rrhh/vacaciones'
+    | '/print/$tipo/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  PrintTipoIdRoute: typeof PrintTipoIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/print/$tipo/$id': {
+      id: '/print/$tipo/$id'
+      path: '/print/$tipo/$id'
+      fullPath: '/print/$tipo/$id'
+      preLoaderRoute: typeof PrintTipoIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/rrhh/vacaciones': {
+      id: '/_app/rrhh/vacaciones'
+      path: '/rrhh/vacaciones'
+      fullPath: '/rrhh/vacaciones'
+      preLoaderRoute: typeof AppRrhhVacacionesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/rrhh/liquidaciones': {
+      id: '/_app/rrhh/liquidaciones'
+      path: '/rrhh/liquidaciones'
+      fullPath: '/rrhh/liquidaciones'
+      preLoaderRoute: typeof AppRrhhLiquidacionesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/rrhh/horas-extras': {
+      id: '/_app/rrhh/horas-extras'
+      path: '/rrhh/horas-extras'
+      fullPath: '/rrhh/horas-extras'
+      preLoaderRoute: typeof AppRrhhHorasExtrasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/rrhh/empleados': {
+      id: '/_app/rrhh/empleados'
+      path: '/rrhh/empleados'
+      fullPath: '/rrhh/empleados'
+      preLoaderRoute: typeof AppRrhhEmpleadosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/rrhh/cartas': {
+      id: '/_app/rrhh/cartas'
+      path: '/rrhh/cartas'
+      fullPath: '/rrhh/cartas'
+      preLoaderRoute: typeof AppRrhhCartasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/rrhh/asistencia': {
+      id: '/_app/rrhh/asistencia'
+      path: '/rrhh/asistencia'
+      fullPath: '/rrhh/asistencia'
+      preLoaderRoute: typeof AppRrhhAsistenciaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reclutamiento/ofertas': {
+      id: '/_app/reclutamiento/ofertas'
+      path: '/reclutamiento/ofertas'
+      fullPath: '/reclutamiento/ofertas'
+      preLoaderRoute: typeof AppReclutamientoOfertasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reclutamiento/candidatos': {
+      id: '/_app/reclutamiento/candidatos'
+      path: '/reclutamiento/candidatos'
+      fullPath: '/reclutamiento/candidatos'
+      preLoaderRoute: typeof AppReclutamientoCandidatosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/operaciones/turnos': {
+      id: '/_app/operaciones/turnos'
+      path: '/operaciones/turnos'
+      fullPath: '/operaciones/turnos'
+      preLoaderRoute: typeof AppOperacionesTurnosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/operaciones/productividad': {
+      id: '/_app/operaciones/productividad'
+      path: '/operaciones/productividad'
+      fullPath: '/operaciones/productividad'
+      preLoaderRoute: typeof AppOperacionesProductividadRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/marketplace/servicios': {
+      id: '/_app/marketplace/servicios'
+      path: '/marketplace/servicios'
+      fullPath: '/marketplace/servicios'
+      preLoaderRoute: typeof AppMarketplaceServiciosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/marketplace/proveedores': {
+      id: '/_app/marketplace/proveedores'
+      path: '/marketplace/proveedores'
+      fullPath: '/marketplace/proveedores'
+      preLoaderRoute: typeof AppMarketplaceProveedoresRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/marketing/contenido': {
+      id: '/_app/marketing/contenido'
+      path: '/marketing/contenido'
+      fullPath: '/marketing/contenido'
+      preLoaderRoute: typeof AppMarketingContenidoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/marketing/campanas': {
+      id: '/_app/marketing/campanas'
+      path: '/marketing/campanas'
+      fullPath: '/marketing/campanas'
+      preLoaderRoute: typeof AppMarketingCampanasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ia/predicciones': {
+      id: '/_app/ia/predicciones'
+      path: '/ia/predicciones'
+      fullPath: '/ia/predicciones'
+      preLoaderRoute: typeof AppIaPrediccionesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ia/alertas': {
+      id: '/_app/ia/alertas'
+      path: '/ia/alertas'
+      fullPath: '/ia/alertas'
+      preLoaderRoute: typeof AppIaAlertasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/finanzas/presupuesto': {
+      id: '/_app/finanzas/presupuesto'
+      path: '/finanzas/presupuesto'
+      fullPath: '/finanzas/presupuesto'
+      preLoaderRoute: typeof AppFinanzasPresupuestoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/finanzas/flujo-caja': {
+      id: '/_app/finanzas/flujo-caja'
+      path: '/finanzas/flujo-caja'
+      fullPath: '/finanzas/flujo-caja'
+      preLoaderRoute: typeof AppFinanzasFlujoCajaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/finanzas/costos': {
+      id: '/_app/finanzas/costos'
+      path: '/finanzas/costos'
+      fullPath: '/finanzas/costos'
+      preLoaderRoute: typeof AppFinanzasCostosRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppFinanzasCostosRoute: typeof AppFinanzasCostosRoute
+  AppFinanzasFlujoCajaRoute: typeof AppFinanzasFlujoCajaRoute
+  AppFinanzasPresupuestoRoute: typeof AppFinanzasPresupuestoRoute
+  AppIaAlertasRoute: typeof AppIaAlertasRoute
+  AppIaPrediccionesRoute: typeof AppIaPrediccionesRoute
+  AppMarketingCampanasRoute: typeof AppMarketingCampanasRoute
+  AppMarketingContenidoRoute: typeof AppMarketingContenidoRoute
+  AppMarketplaceProveedoresRoute: typeof AppMarketplaceProveedoresRoute
+  AppMarketplaceServiciosRoute: typeof AppMarketplaceServiciosRoute
+  AppOperacionesProductividadRoute: typeof AppOperacionesProductividadRoute
+  AppOperacionesTurnosRoute: typeof AppOperacionesTurnosRoute
+  AppReclutamientoCandidatosRoute: typeof AppReclutamientoCandidatosRoute
+  AppReclutamientoOfertasRoute: typeof AppReclutamientoOfertasRoute
+  AppRrhhAsistenciaRoute: typeof AppRrhhAsistenciaRoute
+  AppRrhhCartasRoute: typeof AppRrhhCartasRoute
+  AppRrhhEmpleadosRoute: typeof AppRrhhEmpleadosRoute
+  AppRrhhHorasExtrasRoute: typeof AppRrhhHorasExtrasRoute
+  AppRrhhLiquidacionesRoute: typeof AppRrhhLiquidacionesRoute
+  AppRrhhVacacionesRoute: typeof AppRrhhVacacionesRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppFinanzasCostosRoute: AppFinanzasCostosRoute,
+  AppFinanzasFlujoCajaRoute: AppFinanzasFlujoCajaRoute,
+  AppFinanzasPresupuestoRoute: AppFinanzasPresupuestoRoute,
+  AppIaAlertasRoute: AppIaAlertasRoute,
+  AppIaPrediccionesRoute: AppIaPrediccionesRoute,
+  AppMarketingCampanasRoute: AppMarketingCampanasRoute,
+  AppMarketingContenidoRoute: AppMarketingContenidoRoute,
+  AppMarketplaceProveedoresRoute: AppMarketplaceProveedoresRoute,
+  AppMarketplaceServiciosRoute: AppMarketplaceServiciosRoute,
+  AppOperacionesProductividadRoute: AppOperacionesProductividadRoute,
+  AppOperacionesTurnosRoute: AppOperacionesTurnosRoute,
+  AppReclutamientoCandidatosRoute: AppReclutamientoCandidatosRoute,
+  AppReclutamientoOfertasRoute: AppReclutamientoOfertasRoute,
+  AppRrhhAsistenciaRoute: AppRrhhAsistenciaRoute,
+  AppRrhhCartasRoute: AppRrhhCartasRoute,
+  AppRrhhEmpleadosRoute: AppRrhhEmpleadosRoute,
+  AppRrhhHorasExtrasRoute: AppRrhhHorasExtrasRoute,
+  AppRrhhLiquidacionesRoute: AppRrhhLiquidacionesRoute,
+  AppRrhhVacacionesRoute: AppRrhhVacacionesRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
+  PrintTipoIdRoute: PrintTipoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
