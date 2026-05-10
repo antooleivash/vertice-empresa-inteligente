@@ -34,6 +34,8 @@ export const MODULE_TIER: Record<string, PlanTier> = {
   simulador: "empresa",
   cumplimiento: "empresa",
   operaciones: "empresa",
+  agenda: "basico",
+  clientes: "basico",
   // Corporativo
   reclutamiento: "corporativo",
   marketing: "corporativo",

@@ -22,8 +22,10 @@ import { Route as AppSimuladorRouteImport } from './routes/_app/simulador'
 import { Route as AppInventarioRouteImport } from './routes/_app/inventario'
 import { Route as AppImpuestosRouteImport } from './routes/_app/impuestos'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppClientesRouteImport } from './routes/_app/clientes'
 import { Route as AppCajaRouteImport } from './routes/_app/caja'
 import { Route as AppBalanceRouteImport } from './routes/_app/balance'
+import { Route as AppAgendaRouteImport } from './routes/_app/agenda'
 import { Route as PrintTipoIdRouteImport } from './routes/print.$tipo.$id'
 import { Route as AppRrhhVacacionesRouteImport } from './routes/_app/rrhh/vacaciones'
 import { Route as AppRrhhLiquidacionesRouteImport } from './routes/_app/rrhh/liquidaciones'
@@ -119,6 +121,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppClientesRoute = AppClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCajaRoute = AppCajaRouteImport.update({
   id: '/caja',
   path: '/caja',
@@ -127,6 +134,11 @@ const AppCajaRoute = AppCajaRouteImport.update({
 const AppBalanceRoute = AppBalanceRouteImport.update({
   id: '/balance',
   path: '/balance',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAgendaRoute = AppAgendaRouteImport.update({
+  id: '/agenda',
+  path: '/agenda',
   getParentRoute: () => AppRoute,
 } as any)
 const PrintTipoIdRoute = PrintTipoIdRouteImport.update({
@@ -291,8 +303,10 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/agenda': typeof AppAgendaRoute
   '/balance': typeof AppBalanceRoute
   '/caja': typeof AppCajaRoute
+  '/clientes': typeof AppClientesRoute
   '/dashboard': typeof AppDashboardRoute
   '/impuestos': typeof AppImpuestosRoute
   '/inventario': typeof AppInventarioRoute
@@ -337,8 +351,10 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/agenda': typeof AppAgendaRoute
   '/balance': typeof AppBalanceRoute
   '/caja': typeof AppCajaRoute
+  '/clientes': typeof AppClientesRoute
   '/dashboard': typeof AppDashboardRoute
   '/impuestos': typeof AppImpuestosRoute
   '/inventario': typeof AppInventarioRoute
@@ -385,8 +401,10 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/_app/agenda': typeof AppAgendaRoute
   '/_app/balance': typeof AppBalanceRoute
   '/_app/caja': typeof AppCajaRoute
+  '/_app/clientes': typeof AppClientesRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/impuestos': typeof AppImpuestosRoute
   '/_app/inventario': typeof AppInventarioRoute
@@ -433,8 +451,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/agenda'
     | '/balance'
     | '/caja'
+    | '/clientes'
     | '/dashboard'
     | '/impuestos'
     | '/inventario'
@@ -479,8 +499,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/agenda'
     | '/balance'
     | '/caja'
+    | '/clientes'
     | '/dashboard'
     | '/impuestos'
     | '/inventario'
@@ -526,8 +548,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/_app/agenda'
     | '/_app/balance'
     | '/_app/caja'
+    | '/_app/clientes'
     | '/_app/dashboard'
     | '/_app/impuestos'
     | '/_app/inventario'
@@ -670,6 +694,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/clientes': {
+      id: '/_app/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof AppClientesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/caja': {
       id: '/_app/caja'
       path: '/caja'
@@ -682,6 +713,13 @@ declare module '@tanstack/react-router' {
       path: '/balance'
       fullPath: '/balance'
       preLoaderRoute: typeof AppBalanceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/agenda': {
+      id: '/_app/agenda'
+      path: '/agenda'
+      fullPath: '/agenda'
+      preLoaderRoute: typeof AppAgendaRouteImport
       parentRoute: typeof AppRoute
     }
     '/print/$tipo/$id': {
@@ -898,8 +936,10 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppAgendaRoute: typeof AppAgendaRoute
   AppBalanceRoute: typeof AppBalanceRoute
   AppCajaRoute: typeof AppCajaRoute
+  AppClientesRoute: typeof AppClientesRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppImpuestosRoute: typeof AppImpuestosRoute
   AppInventarioRoute: typeof AppInventarioRoute
@@ -936,8 +976,10 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAgendaRoute: AppAgendaRoute,
   AppBalanceRoute: AppBalanceRoute,
   AppCajaRoute: AppCajaRoute,
+  AppClientesRoute: AppClientesRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppImpuestosRoute: AppImpuestosRoute,
   AppInventarioRoute: AppInventarioRoute,
