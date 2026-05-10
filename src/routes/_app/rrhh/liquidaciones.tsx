@@ -147,6 +147,7 @@ function LiquidacionesPage() {
                 <span>Salario mínimo: <strong className="tabular-nums">{salarioMinimo ? formatCLP(salarioMinimo) : "—"}</strong></span>
               </div>
 
+              <Section title="Datos básicos">
                 <div className="col-span-2">
                   <Label>Empleado</Label>
                   <Select value={form.empleado_id} onValueChange={(v) => {
