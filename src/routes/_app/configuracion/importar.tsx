@@ -149,14 +149,14 @@ const SPECS: ImportSpec[] = [
         const empleado_id = map.get(r.rut as string);
         if (!empleado_id) return [];
         return [{
-          empleado_id, fecha: r.fecha,
-          hora_entrada: `${r.fecha}T${r.hora_entrada}:00`,
-          hora_salida: `${r.fecha}T${r.hora_salida}:00`,
-          origen: "Importación Excel",
+          empleado_id, fecha: r.fecha as string,
+          entrada: r.hora_entrada as string,
+          salida: r.hora_salida as string,
+          estado: "presente",
         }];
       });
       if (payload.length === 0) return { inserted: 0, failed: rows.length, details: "Ningún RUT coincide con un empleado existente." };
-      const { error, data } = await supabase.from("marcajes").insert(payload).select();
+      const { error, data } = await supabase.from("asistencia").insert(payload).select();
       if (error) return { inserted: 0, failed: rows.length, details: error.message };
       return { inserted: data?.length ?? 0, failed: rows.length - (data?.length ?? 0) };
     },
