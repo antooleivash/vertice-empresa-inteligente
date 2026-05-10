@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Trash2, FileText, FileDown } from "lucide-react";
+import { useIndicadores } from "@/hooks/use-indicadores";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/cumplimiento/contratos")({ component: ContratosPage });
@@ -35,6 +36,8 @@ function estadoContrato(c: Contrato): { label: string; variant: "default" | "sec
 
 function ContratosPage() {
   const { empleados, empleadosMap } = useEmpleados();
+  const { data: indicadores } = useIndicadores();
+  const ufActual = indicadores.uf?.valor;
   const [items, setItems] = useState<Contrato[]>([]);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<Partial<Contrato>>({
@@ -112,7 +115,7 @@ function ContratosPage() {
 
       <Card className="overflow-hidden">
         <Table>
-          <TableHeader><TableRow><TableHead>Empleado</TableHead><TableHead>Tipo</TableHead><TableHead>Cargo</TableHead><TableHead>Inicio</TableHead><TableHead>Vencimiento</TableHead><TableHead className="text-right">Sueldo</TableHead><TableHead>Estado</TableHead><TableHead></TableHead></TableRow></TableHeader>
+          <TableHeader><TableRow><TableHead>Empleado</TableHead><TableHead>Tipo</TableHead><TableHead>Cargo</TableHead><TableHead>Inicio</TableHead><TableHead>Vencimiento</TableHead><TableHead className="text-right">Sueldo</TableHead><TableHead className="text-right">UF equiv.</TableHead><TableHead>Estado</TableHead><TableHead></TableHead></TableRow></TableHeader>
           <TableBody>
             {items.map((c) => {
               const est = estadoContrato(c);
@@ -124,6 +127,7 @@ function ContratosPage() {
                   <TableCell>{formatDate(c.fecha_inicio)}</TableCell>
                   <TableCell>{c.fecha_vencimiento ? formatDate(c.fecha_vencimiento) : "Indefinido"}</TableCell>
                   <TableCell className="text-right">{formatCLP(c.sueldo_base)}</TableCell>
+                  <TableCell className="text-right text-muted-foreground tabular-nums">{ufActual ? (c.sueldo_base / ufActual).toFixed(2) + " UF" : "—"}</TableCell>
                   <TableCell>
                     <Badge variant={est.variant}>{est.label}{est.days !== null && est.label === "Por vencer" ? ` (${est.days}d)` : ""}</Badge>
                   </TableCell>
