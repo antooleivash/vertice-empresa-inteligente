@@ -50,6 +50,8 @@ import { Route as AppCumplimientoJornadaRouteImport } from './routes/_app/cumpli
 import { Route as AppCumplimientoDocumentosRouteImport } from './routes/_app/cumplimiento/documentos'
 import { Route as AppCumplimientoContratosRouteImport } from './routes/_app/cumplimiento/contratos'
 import { Route as AppCumplimientoAlertasRouteImport } from './routes/_app/cumplimiento/alertas'
+import { Route as AppConfiguracionPlanRouteImport } from './routes/_app/configuracion/plan'
+import { Route as AppConfiguracionImportarRouteImport } from './routes/_app/configuracion/importar'
 import { Route as AppConfiguracionEmpresaRouteImport } from './routes/_app/configuracion/empresa'
 
 const PortalRoute = PortalRouteImport.update({
@@ -261,6 +263,17 @@ const AppCumplimientoAlertasRoute = AppCumplimientoAlertasRouteImport.update({
   path: '/cumplimiento/alertas',
   getParentRoute: () => AppRoute,
 } as any)
+const AppConfiguracionPlanRoute = AppConfiguracionPlanRouteImport.update({
+  id: '/configuracion/plan',
+  path: '/configuracion/plan',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConfiguracionImportarRoute =
+  AppConfiguracionImportarRouteImport.update({
+    id: '/configuracion/importar',
+    path: '/configuracion/importar',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppConfiguracionEmpresaRoute = AppConfiguracionEmpresaRouteImport.update({
   id: '/configuracion/empresa',
   path: '/configuracion/empresa',
@@ -282,6 +295,8 @@ export interface FileRoutesByFullPath {
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
   '/portal/permisos': typeof PortalPermisosRoute
   '/configuracion/empresa': typeof AppConfiguracionEmpresaRoute
+  '/configuracion/importar': typeof AppConfiguracionImportarRoute
+  '/configuracion/plan': typeof AppConfiguracionPlanRoute
   '/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
   '/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
   '/cumplimiento/documentos': typeof AppCumplimientoDocumentosRoute
@@ -325,6 +340,8 @@ export interface FileRoutesByTo {
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
   '/portal/permisos': typeof PortalPermisosRoute
   '/configuracion/empresa': typeof AppConfiguracionEmpresaRoute
+  '/configuracion/importar': typeof AppConfiguracionImportarRoute
+  '/configuracion/plan': typeof AppConfiguracionPlanRoute
   '/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
   '/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
   '/cumplimiento/documentos': typeof AppCumplimientoDocumentosRoute
@@ -370,6 +387,8 @@ export interface FileRoutesById {
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
   '/portal/permisos': typeof PortalPermisosRoute
   '/_app/configuracion/empresa': typeof AppConfiguracionEmpresaRoute
+  '/_app/configuracion/importar': typeof AppConfiguracionImportarRoute
+  '/_app/configuracion/plan': typeof AppConfiguracionPlanRoute
   '/_app/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
   '/_app/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
   '/_app/cumplimiento/documentos': typeof AppCumplimientoDocumentosRoute
@@ -415,6 +434,8 @@ export interface FileRouteTypes {
     | '/portal/liquidaciones'
     | '/portal/permisos'
     | '/configuracion/empresa'
+    | '/configuracion/importar'
+    | '/configuracion/plan'
     | '/cumplimiento/alertas'
     | '/cumplimiento/contratos'
     | '/cumplimiento/documentos'
@@ -458,6 +479,8 @@ export interface FileRouteTypes {
     | '/portal/liquidaciones'
     | '/portal/permisos'
     | '/configuracion/empresa'
+    | '/configuracion/importar'
+    | '/configuracion/plan'
     | '/cumplimiento/alertas'
     | '/cumplimiento/contratos'
     | '/cumplimiento/documentos'
@@ -502,6 +525,8 @@ export interface FileRouteTypes {
     | '/portal/liquidaciones'
     | '/portal/permisos'
     | '/_app/configuracion/empresa'
+    | '/_app/configuracion/importar'
+    | '/_app/configuracion/plan'
     | '/_app/cumplimiento/alertas'
     | '/_app/cumplimiento/contratos'
     | '/_app/cumplimiento/documentos'
@@ -829,6 +854,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCumplimientoAlertasRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/configuracion/plan': {
+      id: '/_app/configuracion/plan'
+      path: '/configuracion/plan'
+      fullPath: '/configuracion/plan'
+      preLoaderRoute: typeof AppConfiguracionPlanRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/configuracion/importar': {
+      id: '/_app/configuracion/importar'
+      path: '/configuracion/importar'
+      fullPath: '/configuracion/importar'
+      preLoaderRoute: typeof AppConfiguracionImportarRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/configuracion/empresa': {
       id: '/_app/configuracion/empresa'
       path: '/configuracion/empresa'
@@ -846,6 +885,8 @@ interface AppRouteChildren {
   AppInventarioRoute: typeof AppInventarioRoute
   AppSimuladorRoute: typeof AppSimuladorRoute
   AppConfiguracionEmpresaRoute: typeof AppConfiguracionEmpresaRoute
+  AppConfiguracionImportarRoute: typeof AppConfiguracionImportarRoute
+  AppConfiguracionPlanRoute: typeof AppConfiguracionPlanRoute
   AppCumplimientoAlertasRoute: typeof AppCumplimientoAlertasRoute
   AppCumplimientoContratosRoute: typeof AppCumplimientoContratosRoute
   AppCumplimientoDocumentosRoute: typeof AppCumplimientoDocumentosRoute
@@ -881,6 +922,8 @@ const AppRouteChildren: AppRouteChildren = {
   AppInventarioRoute: AppInventarioRoute,
   AppSimuladorRoute: AppSimuladorRoute,
   AppConfiguracionEmpresaRoute: AppConfiguracionEmpresaRoute,
+  AppConfiguracionImportarRoute: AppConfiguracionImportarRoute,
+  AppConfiguracionPlanRoute: AppConfiguracionPlanRoute,
   AppCumplimientoAlertasRoute: AppCumplimientoAlertasRoute,
   AppCumplimientoContratosRoute: AppCumplimientoContratosRoute,
   AppCumplimientoDocumentosRoute: AppCumplimientoDocumentosRoute,
