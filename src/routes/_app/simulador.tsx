@@ -292,6 +292,15 @@ function ProyeccionPreciosTab({ items }: { items: Item[] }) {
         <SliderField label="% de aumento de precio" value={aumento} min={-30} max={50} step={1} onChange={setAumento} suffix="%" />
         <SliderField label="% clientes que se perderían" value={perdida} min={0} max={80} step={1} onChange={setPerdida} suffix="%" />
         <SliderField label="Costos fijos mensuales (CLP)" value={costosFijos} min={0} max={10000000} step={50000} onChange={setCostosFijos} suffix="" format={formatCLP} />
+        <div className="flex items-center justify-between rounded-md border p-3">
+          <div>
+            <div className="text-sm font-medium">Ajuste por IPC</div>
+            <div className="text-xs text-muted-foreground">
+              Suma la inflación mensual actual ({ipcMensual.toFixed(2)}%) al aumento de precio.
+            </div>
+          </div>
+          <Switch checked={ajusteIPC} onCheckedChange={setAjusteIPC} />
+        </div>
       </Card>
 
       <div className="space-y-4">
@@ -302,6 +311,12 @@ function ProyeccionPreciosTab({ items }: { items: Item[] }) {
           <KPI title="Margen" value={`${margenProy.toFixed(1)}%`} />
         </div>
         <AICard tone={recomienda ? "good" : "bad"} title={aiTitle}>{aiBody}</AICard>
+        {ipcMensual > 0 && (
+          <AICard tone="warn" title={`Inflación actual: ${ipcMensual.toFixed(2)}% mensual (≈${ipcAnualEstimado.toFixed(1)}% anual)`}>
+            En pesos de hoy, tu ganancia real proyectada en 6 meses sería <strong>{formatCLP(utilidadReal6m)}</strong> (vs {formatCLP(utilidadProy)} nominal).
+            Para mantener tu margen real necesitas subir precios al menos <strong>{ipcMensual.toFixed(2)}% mensual</strong> (igual al IPC).
+          </AICard>
+        )}
       </div>
     </div>
   );
