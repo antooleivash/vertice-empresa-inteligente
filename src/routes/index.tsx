@@ -6,7 +6,9 @@ import {
   Users, Wallet, Activity, Brain, ShieldCheck, Smartphone, UserSearch,
   Check, Sparkles, LineChart, ShieldQuestion, Building2, Truck, Anchor,
   ShoppingBag, HardHat, Factory, ArrowRight, Mail,
+  Scale, MapPin, MessageCircle, Link as LinkIcon, BarChart,
 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -120,6 +122,9 @@ function Landing() {
           </div>
         </div>
       </section>
+
+      {/* DIFERENCIADORES */}
+      <DiferenciadoresSection />
 
       {/* MÓDULOS */}
       <section id="modulos" className="mx-auto max-w-6xl px-6 py-24">
@@ -284,5 +289,75 @@ function Footer() {
         </p>
       </div>
     </footer>
+  );
+}
+
+const diferenciadores = [
+  { icon: Brain, title: "IA que predice antes de que ocurra", desc: "Detecta patrones de ausentismo, riesgo de multas DT y pérdidas financieras antes de que afecten tu operación. No reacciones — anticípate." },
+  { icon: Scale, title: "Copiloto legal laboral", desc: "El único software que te avisa automáticamente cuando un trabajador está en causal de despido, cuando un contrato vence o cuando estás al límite de las 42 horas semanales según Ley 21.561." },
+  { icon: MapPin, title: "Marcaje con GPS y cámara", desc: "Los trabajadores marcan su entrada desde el celular con verificación de ubicación GPS. Sin biométricos costosos, sin fraudes." },
+  { icon: MessageCircle, title: "IA conversacional empresarial", desc: "Pregúntale a Vértice: ¿Qué área está perdiendo más dinero? ¿Por qué aumentó el ausentismo? ¿Qué trabajador tiene riesgo de despido? La IA responde con tus datos reales." },
+  { icon: LinkIcon, title: "RRHH + Finanzas + Operaciones unidos", desc: "El único sistema que conecta el ausentismo de un trabajador con el costo real que genera en tu empresa. Ve el impacto financiero de cada decisión de personas." },
+  { icon: BarChart, title: "Dashboard gerencial en tiempo real", desc: "Visualiza tu empresa completa en una pantalla. KPIs, alertas, costos y productividad actualizados al instante. Toma decisiones con datos, no con intuición." },
+];
+
+function DiferenciadoresSection() {
+  return (
+    <section className="border-t" style={{ backgroundColor: "#f8f9fb" }}>
+      <div className="mx-auto max-w-6xl px-6 py-24">
+        <div className="text-center max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
+            La innovación que ningún otro software tiene
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            Vértice no solo registra datos — los interpreta, aprende y actúa antes de que los problemas ocurran.
+          </p>
+        </div>
+        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {diferenciadores.map((d, i) => (
+            <RevealCard key={d.title} delay={i * 80}>
+              <div
+                className="h-full rounded-xl bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+                style={{ borderLeft: "3px solid #185FA5" }}
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ color: "#185FA5", backgroundColor: "rgba(24,95,165,0.08)" }}>
+                  <d.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-semibold text-foreground">{d.title}</h3>
+                <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{d.desc}</p>
+              </div>
+            </RevealCard>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RevealCard({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); io.disconnect(); } },
+      { threshold: 0.15 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div
+      ref={ref}
+      style={{
+        transitionDelay: `${delay}ms`,
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(16px)",
+        transition: "opacity 600ms ease-out, transform 600ms ease-out",
+      }}
+    >
+      {children}
+    </div>
   );
 }
