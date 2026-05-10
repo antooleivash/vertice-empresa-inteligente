@@ -89,13 +89,24 @@ function EmpleadosPage() {
                   </Select>
                 </Field>
                 <Field label="Fecha ingreso"><Input type="date" value={form.fecha_ingreso ?? ""} onChange={(e) => setForm({ ...form, fecha_ingreso: e.target.value })} /></Field>
-                <Field label="Sueldo base"><Input type="number" value={form.sueldo_base ?? 0} onChange={(e) => setForm({ ...form, sueldo_base: Number(e.target.value) })} /></Field>
+                <Field label="Sueldo base">
+                  <Input
+                    type="text"
+                    inputMode="numeric"
+                    value={form.sueldo_base ? new Intl.NumberFormat("es-CL").format(form.sueldo_base) : ""}
+                    onChange={(e) => {
+                      const digits = e.target.value.replace(/\D/g, "");
+                      setForm({ ...form, sueldo_base: digits ? parseInt(digits, 10) : 0 });
+                    }}
+                    placeholder="550.000"
+                  />
+                </Field>
                 <Field label="Activo">
-                  <Select value={String(form.activo ?? true)} onValueChange={(v) => setForm({ ...form, activo: v === "true" })}>
+                  <Select value={form.activo === false ? "false" : "true"} onValueChange={(v) => setForm({ ...form, activo: v === "true" })}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="true">Sí</SelectItem>
-                      <SelectItem value="false">No</SelectItem>
+                      <SelectItem value="true">Activo</SelectItem>
+                      <SelectItem value="false">Inactivo</SelectItem>
                     </SelectContent>
                   </Select>
                 </Field>
