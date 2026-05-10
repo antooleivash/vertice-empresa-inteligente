@@ -31,7 +31,10 @@ import { Route as AppMarketingCampanasRouteImport } from './routes/_app/marketin
 import { Route as AppIaPrediccionesRouteImport } from './routes/_app/ia/predicciones'
 import { Route as AppIaAlertasRouteImport } from './routes/_app/ia/alertas'
 import { Route as AppFinanzasPresupuestoRouteImport } from './routes/_app/finanzas/presupuesto'
+import { Route as AppFinanzasIngresosRouteImport } from './routes/_app/finanzas/ingresos'
+import { Route as AppFinanzasGastosRouteImport } from './routes/_app/finanzas/gastos'
 import { Route as AppFinanzasFlujoCajaRouteImport } from './routes/_app/finanzas/flujo-caja'
+import { Route as AppFinanzasDashboardRouteImport } from './routes/_app/finanzas/dashboard'
 import { Route as AppFinanzasCostosRouteImport } from './routes/_app/finanzas/costos'
 
 const MarcarRoute = MarcarRouteImport.update({
@@ -146,9 +149,24 @@ const AppFinanzasPresupuestoRoute = AppFinanzasPresupuestoRouteImport.update({
   path: '/finanzas/presupuesto',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFinanzasIngresosRoute = AppFinanzasIngresosRouteImport.update({
+  id: '/finanzas/ingresos',
+  path: '/finanzas/ingresos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanzasGastosRoute = AppFinanzasGastosRouteImport.update({
+  id: '/finanzas/gastos',
+  path: '/finanzas/gastos',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppFinanzasFlujoCajaRoute = AppFinanzasFlujoCajaRouteImport.update({
   id: '/finanzas/flujo-caja',
   path: '/finanzas/flujo-caja',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanzasDashboardRoute = AppFinanzasDashboardRouteImport.update({
+  id: '/finanzas/dashboard',
+  path: '/finanzas/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
 const AppFinanzasCostosRoute = AppFinanzasCostosRouteImport.update({
@@ -162,7 +180,10 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/finanzas/costos': typeof AppFinanzasCostosRoute
+  '/finanzas/dashboard': typeof AppFinanzasDashboardRoute
   '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
+  '/finanzas/gastos': typeof AppFinanzasGastosRoute
+  '/finanzas/ingresos': typeof AppFinanzasIngresosRoute
   '/finanzas/presupuesto': typeof AppFinanzasPresupuestoRoute
   '/ia/alertas': typeof AppIaAlertasRoute
   '/ia/predicciones': typeof AppIaPrediccionesRoute
@@ -187,7 +208,10 @@ export interface FileRoutesByTo {
   '/marcar': typeof MarcarRoute
   '/': typeof AppIndexRoute
   '/finanzas/costos': typeof AppFinanzasCostosRoute
+  '/finanzas/dashboard': typeof AppFinanzasDashboardRoute
   '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
+  '/finanzas/gastos': typeof AppFinanzasGastosRoute
+  '/finanzas/ingresos': typeof AppFinanzasIngresosRoute
   '/finanzas/presupuesto': typeof AppFinanzasPresupuestoRoute
   '/ia/alertas': typeof AppIaAlertasRoute
   '/ia/predicciones': typeof AppIaPrediccionesRoute
@@ -214,7 +238,10 @@ export interface FileRoutesById {
   '/marcar': typeof MarcarRoute
   '/_app/': typeof AppIndexRoute
   '/_app/finanzas/costos': typeof AppFinanzasCostosRoute
+  '/_app/finanzas/dashboard': typeof AppFinanzasDashboardRoute
   '/_app/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
+  '/_app/finanzas/gastos': typeof AppFinanzasGastosRoute
+  '/_app/finanzas/ingresos': typeof AppFinanzasIngresosRoute
   '/_app/finanzas/presupuesto': typeof AppFinanzasPresupuestoRoute
   '/_app/ia/alertas': typeof AppIaAlertasRoute
   '/_app/ia/predicciones': typeof AppIaPrediccionesRoute
@@ -241,7 +268,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/finanzas/costos'
+    | '/finanzas/dashboard'
     | '/finanzas/flujo-caja'
+    | '/finanzas/gastos'
+    | '/finanzas/ingresos'
     | '/finanzas/presupuesto'
     | '/ia/alertas'
     | '/ia/predicciones'
@@ -266,7 +296,10 @@ export interface FileRouteTypes {
     | '/marcar'
     | '/'
     | '/finanzas/costos'
+    | '/finanzas/dashboard'
     | '/finanzas/flujo-caja'
+    | '/finanzas/gastos'
+    | '/finanzas/ingresos'
     | '/finanzas/presupuesto'
     | '/ia/alertas'
     | '/ia/predicciones'
@@ -292,7 +325,10 @@ export interface FileRouteTypes {
     | '/marcar'
     | '/_app/'
     | '/_app/finanzas/costos'
+    | '/_app/finanzas/dashboard'
     | '/_app/finanzas/flujo-caja'
+    | '/_app/finanzas/gastos'
+    | '/_app/finanzas/ingresos'
     | '/_app/finanzas/presupuesto'
     | '/_app/ia/alertas'
     | '/_app/ia/predicciones'
@@ -476,11 +512,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFinanzasPresupuestoRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/finanzas/ingresos': {
+      id: '/_app/finanzas/ingresos'
+      path: '/finanzas/ingresos'
+      fullPath: '/finanzas/ingresos'
+      preLoaderRoute: typeof AppFinanzasIngresosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/finanzas/gastos': {
+      id: '/_app/finanzas/gastos'
+      path: '/finanzas/gastos'
+      fullPath: '/finanzas/gastos'
+      preLoaderRoute: typeof AppFinanzasGastosRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/finanzas/flujo-caja': {
       id: '/_app/finanzas/flujo-caja'
       path: '/finanzas/flujo-caja'
       fullPath: '/finanzas/flujo-caja'
       preLoaderRoute: typeof AppFinanzasFlujoCajaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/finanzas/dashboard': {
+      id: '/_app/finanzas/dashboard'
+      path: '/finanzas/dashboard'
+      fullPath: '/finanzas/dashboard'
+      preLoaderRoute: typeof AppFinanzasDashboardRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/finanzas/costos': {
@@ -496,7 +553,10 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppFinanzasCostosRoute: typeof AppFinanzasCostosRoute
+  AppFinanzasDashboardRoute: typeof AppFinanzasDashboardRoute
   AppFinanzasFlujoCajaRoute: typeof AppFinanzasFlujoCajaRoute
+  AppFinanzasGastosRoute: typeof AppFinanzasGastosRoute
+  AppFinanzasIngresosRoute: typeof AppFinanzasIngresosRoute
   AppFinanzasPresupuestoRoute: typeof AppFinanzasPresupuestoRoute
   AppIaAlertasRoute: typeof AppIaAlertasRoute
   AppIaPrediccionesRoute: typeof AppIaPrediccionesRoute
@@ -519,7 +579,10 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppFinanzasCostosRoute: AppFinanzasCostosRoute,
+  AppFinanzasDashboardRoute: AppFinanzasDashboardRoute,
   AppFinanzasFlujoCajaRoute: AppFinanzasFlujoCajaRoute,
+  AppFinanzasGastosRoute: AppFinanzasGastosRoute,
+  AppFinanzasIngresosRoute: AppFinanzasIngresosRoute,
   AppFinanzasPresupuestoRoute: AppFinanzasPresupuestoRoute,
   AppIaAlertasRoute: AppIaAlertasRoute,
   AppIaPrediccionesRoute: AppIaPrediccionesRoute,
@@ -550,13 +613,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
