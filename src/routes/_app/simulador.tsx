@@ -15,6 +15,8 @@ import { CartesianGrid, Legend, Line, LineChart, ReferenceDot, ResponsiveContain
 import { formatCLP } from "@/lib/domain";
 import { useLocalList, uid } from "@/lib/local-store";
 import { Plus, Pencil, Sparkles, TrendingUp, TrendingDown, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { useIndicadores } from "@/hooks/use-indicadores";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/simulador")({ component: SimuladorPage });
@@ -236,19 +238,25 @@ function NoItems() {
 /* -------------------- Tab 1: Proyección de precios -------------------- */
 
 function ProyeccionPreciosTab({ items }: { items: Item[] }) {
+  const { data: indicadores } = useIndicadores();
+  const ipcMensual = indicadores.ipc?.valor ?? 0; // % mensual
+  const ipcAnualEstimado = ipcMensual * 12;
+
   const [selId, setSelId] = useState<string>("");
   const sel = items.find((i) => i.id === selId) ?? items[0];
   const [clientes, setClientes] = useState(100);
   const [aumento, setAumento] = useState(10);
   const [perdida, setPerdida] = useState(15);
   const [costosFijos, setCostosFijos] = useState(500000);
+  const [ajusteIPC, setAjusteIPC] = useState(false);
 
   if (items.length === 0) return <NoItems />;
   if (!sel) return null;
 
+  const aumentoEfectivo = ajusteIPC ? aumento + ipcMensual : aumento;
   const precioActual = sel.precio_venta;
   const costoUnit = sel.costo_variable;
-  const precioNuevo = precioActual * (1 + aumento / 100);
+  const precioNuevo = precioActual * (1 + aumentoEfectivo / 100);
   const clientesNuevos = clientes * (1 - perdida / 100);
 
   const ingresoActual = precioActual * clientes;
@@ -257,6 +265,10 @@ function ProyeccionPreciosTab({ items }: { items: Item[] }) {
   const utilidadProy = (precioNuevo - costoUnit) * clientesNuevos - costosFijos;
   const margenProy = ingresoProy > 0 ? (utilidadProy / ingresoProy) * 100 : 0;
   const delta = utilidadProy - utilidadActual;
+
+  // Poder adquisitivo real a 6 meses descontando inflación
+  const factorInflacion6m = Math.pow(1 + ipcMensual / 100, 6);
+  const utilidadReal6m = utilidadProy / factorInflacion6m;
 
   const recomienda = delta > 0;
   const aiTitle = recomienda ? `Subir el precio ${aumento}% es conveniente` : `No se recomienda subir el precio ${aumento}%`;
