@@ -18,7 +18,9 @@ import { Route as PortalPermisosRouteImport } from './routes/portal.permisos'
 import { Route as PortalLiquidacionesRouteImport } from './routes/portal.liquidaciones'
 import { Route as PortalDocumentosRouteImport } from './routes/portal.documentos'
 import { Route as PortalAsistenciaRouteImport } from './routes/portal.asistencia'
+import { Route as AppInventarioRouteImport } from './routes/_app/inventario'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppBalanceRouteImport } from './routes/_app/balance'
 import { Route as PrintTipoIdRouteImport } from './routes/print.$tipo.$id'
 import { Route as AppRrhhVacacionesRouteImport } from './routes/_app/rrhh/vacaciones'
 import { Route as AppRrhhLiquidacionesRouteImport } from './routes/_app/rrhh/liquidaciones'
@@ -92,9 +94,19 @@ const PortalAsistenciaRoute = PortalAsistenciaRouteImport.update({
   path: '/asistencia',
   getParentRoute: () => PortalRoute,
 } as any)
+const AppInventarioRoute = AppInventarioRouteImport.update({
+  id: '/inventario',
+  path: '/inventario',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBalanceRoute = AppBalanceRouteImport.update({
+  id: '/balance',
+  path: '/balance',
   getParentRoute: () => AppRoute,
 } as any)
 const PrintTipoIdRoute = PrintTipoIdRouteImport.update({
@@ -248,7 +260,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/balance': typeof AppBalanceRoute
   '/dashboard': typeof AppDashboardRoute
+  '/inventario': typeof AppInventarioRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
@@ -287,7 +301,9 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/balance': typeof AppBalanceRoute
   '/dashboard': typeof AppDashboardRoute
+  '/inventario': typeof AppInventarioRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
@@ -328,7 +344,9 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/_app/balance': typeof AppBalanceRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/inventario': typeof AppInventarioRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
@@ -369,7 +387,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/balance'
     | '/dashboard'
+    | '/inventario'
     | '/portal/asistencia'
     | '/portal/documentos'
     | '/portal/liquidaciones'
@@ -408,7 +428,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/balance'
     | '/dashboard'
+    | '/inventario'
     | '/portal/asistencia'
     | '/portal/documentos'
     | '/portal/liquidaciones'
@@ -448,7 +470,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/_app/balance'
     | '/_app/dashboard'
+    | '/_app/inventario'
     | '/portal/asistencia'
     | '/portal/documentos'
     | '/portal/liquidaciones'
@@ -557,11 +581,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalAsistenciaRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/_app/inventario': {
+      id: '/_app/inventario'
+      path: '/inventario'
+      fullPath: '/inventario'
+      preLoaderRoute: typeof AppInventarioRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/balance': {
+      id: '/_app/balance'
+      path: '/balance'
+      fullPath: '/balance'
+      preLoaderRoute: typeof AppBalanceRouteImport
       parentRoute: typeof AppRoute
     }
     '/print/$tipo/$id': {
@@ -764,7 +802,9 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppBalanceRoute: typeof AppBalanceRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppInventarioRoute: typeof AppInventarioRoute
   AppConfiguracionEmpresaRoute: typeof AppConfiguracionEmpresaRoute
   AppCumplimientoAlertasRoute: typeof AppCumplimientoAlertasRoute
   AppCumplimientoContratosRoute: typeof AppCumplimientoContratosRoute
@@ -795,7 +835,9 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppBalanceRoute: AppBalanceRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppInventarioRoute: AppInventarioRoute,
   AppConfiguracionEmpresaRoute: AppConfiguracionEmpresaRoute,
   AppCumplimientoAlertasRoute: AppCumplimientoAlertasRoute,
   AppCumplimientoContratosRoute: AppCumplimientoContratosRoute,
