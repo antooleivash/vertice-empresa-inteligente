@@ -9,10 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PortalRouteImport } from './routes/portal'
 import { Route as MarcarRouteImport } from './routes/marcar'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as PortalPermisosRouteImport } from './routes/portal.permisos'
+import { Route as PortalLiquidacionesRouteImport } from './routes/portal.liquidaciones'
+import { Route as PortalDocumentosRouteImport } from './routes/portal.documentos'
+import { Route as PortalAsistenciaRouteImport } from './routes/portal.asistencia'
 import { Route as PrintTipoIdRouteImport } from './routes/print.$tipo.$id'
 import { Route as AppRrhhVacacionesRouteImport } from './routes/_app/rrhh/vacaciones'
 import { Route as AppRrhhLiquidacionesRouteImport } from './routes/_app/rrhh/liquidaciones'
@@ -41,6 +46,11 @@ import { Route as AppCumplimientoDocumentosRouteImport } from './routes/_app/cum
 import { Route as AppCumplimientoContratosRouteImport } from './routes/_app/cumplimiento/contratos'
 import { Route as AppCumplimientoAlertasRouteImport } from './routes/_app/cumplimiento/alertas'
 
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarcarRoute = MarcarRouteImport.update({
   id: '/marcar',
   path: '/marcar',
@@ -59,6 +69,26 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const PortalPermisosRoute = PortalPermisosRouteImport.update({
+  id: '/permisos',
+  path: '/permisos',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalLiquidacionesRoute = PortalLiquidacionesRouteImport.update({
+  id: '/liquidaciones',
+  path: '/liquidaciones',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalDocumentosRoute = PortalDocumentosRouteImport.update({
+  id: '/documentos',
+  path: '/documentos',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAsistenciaRoute = PortalAsistenciaRouteImport.update({
+  id: '/asistencia',
+  path: '/asistencia',
+  getParentRoute: () => PortalRoute,
 } as any)
 const PrintTipoIdRoute = PrintTipoIdRouteImport.update({
   id: '/print/$tipo/$id',
@@ -205,6 +235,11 @@ export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
+  '/portal': typeof PortalRouteWithChildren
+  '/portal/asistencia': typeof PortalAsistenciaRoute
+  '/portal/documentos': typeof PortalDocumentosRoute
+  '/portal/liquidaciones': typeof PortalLiquidacionesRoute
+  '/portal/permisos': typeof PortalPermisosRoute
   '/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
   '/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
   '/cumplimiento/documentos': typeof AppCumplimientoDocumentosRoute
@@ -236,6 +271,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
+  '/portal': typeof PortalRouteWithChildren
+  '/portal/asistencia': typeof PortalAsistenciaRoute
+  '/portal/documentos': typeof PortalDocumentosRoute
+  '/portal/liquidaciones': typeof PortalLiquidacionesRoute
+  '/portal/permisos': typeof PortalPermisosRoute
   '/': typeof AppIndexRoute
   '/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
   '/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
@@ -270,6 +310,11 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
+  '/portal': typeof PortalRouteWithChildren
+  '/portal/asistencia': typeof PortalAsistenciaRoute
+  '/portal/documentos': typeof PortalDocumentosRoute
+  '/portal/liquidaciones': typeof PortalLiquidacionesRoute
+  '/portal/permisos': typeof PortalPermisosRoute
   '/_app/': typeof AppIndexRoute
   '/_app/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
   '/_app/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
@@ -305,6 +350,11 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/marcar'
+    | '/portal'
+    | '/portal/asistencia'
+    | '/portal/documentos'
+    | '/portal/liquidaciones'
+    | '/portal/permisos'
     | '/cumplimiento/alertas'
     | '/cumplimiento/contratos'
     | '/cumplimiento/documentos'
@@ -336,6 +386,11 @@ export interface FileRouteTypes {
   to:
     | '/login'
     | '/marcar'
+    | '/portal'
+    | '/portal/asistencia'
+    | '/portal/documentos'
+    | '/portal/liquidaciones'
+    | '/portal/permisos'
     | '/'
     | '/cumplimiento/alertas'
     | '/cumplimiento/contratos'
@@ -369,6 +424,11 @@ export interface FileRouteTypes {
     | '/_app'
     | '/login'
     | '/marcar'
+    | '/portal'
+    | '/portal/asistencia'
+    | '/portal/documentos'
+    | '/portal/liquidaciones'
+    | '/portal/permisos'
     | '/_app/'
     | '/_app/cumplimiento/alertas'
     | '/_app/cumplimiento/contratos'
@@ -403,11 +463,19 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   MarcarRoute: typeof MarcarRoute
+  PortalRoute: typeof PortalRouteWithChildren
   PrintTipoIdRoute: typeof PrintTipoIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/marcar': {
       id: '/marcar'
       path: '/marcar'
@@ -435,6 +503,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/portal/permisos': {
+      id: '/portal/permisos'
+      path: '/permisos'
+      fullPath: '/portal/permisos'
+      preLoaderRoute: typeof PortalPermisosRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/liquidaciones': {
+      id: '/portal/liquidaciones'
+      path: '/liquidaciones'
+      fullPath: '/portal/liquidaciones'
+      preLoaderRoute: typeof PortalLiquidacionesRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/documentos': {
+      id: '/portal/documentos'
+      path: '/documentos'
+      fullPath: '/portal/documentos'
+      preLoaderRoute: typeof PortalDocumentosRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/asistencia': {
+      id: '/portal/asistencia'
+      path: '/asistencia'
+      fullPath: '/portal/asistencia'
+      preLoaderRoute: typeof PortalAsistenciaRouteImport
+      parentRoute: typeof PortalRoute
     }
     '/print/$tipo/$id': {
       id: '/print/$tipo/$id'
@@ -690,10 +786,28 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
+interface PortalRouteChildren {
+  PortalAsistenciaRoute: typeof PortalAsistenciaRoute
+  PortalDocumentosRoute: typeof PortalDocumentosRoute
+  PortalLiquidacionesRoute: typeof PortalLiquidacionesRoute
+  PortalPermisosRoute: typeof PortalPermisosRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalAsistenciaRoute: PortalAsistenciaRoute,
+  PortalDocumentosRoute: PortalDocumentosRoute,
+  PortalLiquidacionesRoute: PortalLiquidacionesRoute,
+  PortalPermisosRoute: PortalPermisosRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   MarcarRoute: MarcarRoute,
+  PortalRoute: PortalRouteWithChildren,
   PrintTipoIdRoute: PrintTipoIdRoute,
 }
 export const routeTree = rootRouteImport

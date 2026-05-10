@@ -1,4 +1,6 @@
 // Tipos del dominio Vértice — alineados con tablas Supabase
+export type Rol = "admin" | "supervisor" | "empleado";
+
 export type Empleado = {
   id: string;
   rut: string;
@@ -8,6 +10,21 @@ export type Empleado = {
   fecha_ingreso: string;
   sueldo_base: number;
   activo: boolean;
+  rol?: Rol | null;
+  email?: string | null;
+  user_id?: string | null;
+  foto_url?: string | null;
+  created_at?: string;
+};
+
+export type SolicitudPermiso = {
+  id: string;
+  empleado_id: string;
+  tipo: string;
+  fecha_inicio: string;
+  fecha_fin: string;
+  motivo: string | null;
+  estado: "Pendiente" | "Aprobado" | "Rechazado";
   created_at?: string;
 };
 
