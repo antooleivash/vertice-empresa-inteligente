@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEmpresa } from "@/hooks/use-empresa";
 import { Plus, FileDown, Info, CheckCircle2, History } from "lucide-react";
+import { useIndicadores } from "@/hooks/use-indicadores";
 import { toast } from "sonner";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip as RTooltip, Legend, ResponsiveContainer, CartesianGrid, ComposedChart, Line,
