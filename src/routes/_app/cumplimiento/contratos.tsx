@@ -127,7 +127,10 @@ function ContratosPage() {
                   <TableCell>
                     <Badge variant={est.variant}>{est.label}{est.days !== null && est.label === "Por vencer" ? ` (${est.days}d)` : ""}</Badge>
                   </TableCell>
-                  <TableCell className="text-right"><Button variant="ghost" size="icon" onClick={() => remove(c.id)}><Trash2 className="h-4 w-4" /></Button></TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="icon" onClick={() => window.open(`/print/contrato/${c.id}`, "_blank")} title="Descargar contrato PDF"><FileDown className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" onClick={() => remove(c.id)}><Trash2 className="h-4 w-4" /></Button>
+                  </TableCell>
                 </TableRow>
               );
             })}
