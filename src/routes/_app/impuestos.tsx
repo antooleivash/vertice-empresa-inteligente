@@ -558,3 +558,20 @@ function ImpuestosPage() {
     </PageShell>
   );
 }
+
+function UTMBanner() {
+  // import inline pour éviter circular - server-fn ok with ESM
+  const mod = require("@/hooks/use-indicadores") as typeof import("@/hooks/use-indicadores");
+  const { data } = mod.useIndicadores();
+  const utm = data.utm?.valor;
+  if (!utm) return null;
+  return (
+    <Alert className="mb-4 border-amber-200 bg-amber-50 text-amber-900">
+      <Info className="h-4 w-4" />
+      <AlertTitle>UTM vigente: {fmtCLP(utm)}</AlertTitle>
+      <AlertDescription>
+        Las multas y reajustes del SII se calculan en UTM. Mantén este valor a la vista al evaluar contingencias tributarias.
+      </AlertDescription>
+    </Alert>
+  );
+}
