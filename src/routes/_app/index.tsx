@@ -19,23 +19,26 @@ type KPIKey = "empleados" | "asistencia" | "alertas" | "costo";
 function Dashboard() {
   const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [asistenciaHoy, setAsistenciaHoy] = useState<Asistencia[]>([]);
-  const [horasExtras, setHorasExtras] = useState<HoraExtra[]>([]);
+  const [, setHorasExtras] = useState<HoraExtra[]>([]);
   const [liqs, setLiqs] = useState<Liquidacion[]>([]);
+  const [alertas, setAlertas] = useState<AlertaIA[]>([]);
   const [open, setOpen] = useState<KPIKey | null>(null);
 
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
     (async () => {
-      const [{ data: e }, { data: a }, { data: h }, { data: l }] = await Promise.all([
+      const [{ data: e }, { data: a }, { data: h }, { data: l }, alerts] = await Promise.all([
         supabase.from("empleados").select("*"),
         supabase.from("asistencia").select("*").eq("fecha", today),
         supabase.from("horas_extras").select("*"),
         supabase.from("liquidaciones").select("*"),
+        detectarAlertas(),
       ]);
       setEmpleados((e as Empleado[]) ?? []);
       setAsistenciaHoy((a as Asistencia[]) ?? []);
       setHorasExtras((h as HoraExtra[]) ?? []);
       setLiqs((l as Liquidacion[]) ?? []);
+      setAlertas(alerts);
     })();
   }, []);
 
@@ -51,48 +54,6 @@ function Dashboard() {
     empleados.forEach((e) => m.set(e.id, e));
     return m;
   }, [empleados]);
-
-  // Alertas IA básicas (preview Fase 1)
-  const alertas = useMemo(() => {
-    const items: { id: string; severidad: "critica" | "warning" | "info"; titulo: string; detalle: string }[] = [];
-    horasExtras
-      .filter((h) => !h.autorizadas && h.horas > 4)
-      .slice(0, 3)
-      .forEach((h) => {
-        const emp = empMap.get(h.empleado_id);
-        items.push({
-          id: `he-${h.id}`,
-          severidad: "critica",
-          titulo: "Horas extra sin autorizar",
-          detalle: `${emp?.nombre ?? "Empleado"} registró ${h.horas}h extras no autorizadas.`,
-        });
-      });
-    if (ausentes.length >= 3) {
-      items.push({
-        id: "aus-hoy",
-        severidad: "warning",
-        titulo: "Ausentismo elevado hoy",
-        detalle: `${ausentes.length} empleados ausentes en la jornada de hoy.`,
-      });
-    }
-    if (atrasos.length > 0) {
-      items.push({
-        id: "atr-hoy",
-        severidad: "info",
-        titulo: "Atrasos detectados",
-        detalle: `${atrasos.length} empleados llegaron con atraso hoy.`,
-      });
-    }
-    if (items.length === 0) {
-      items.push({
-        id: "ok",
-        severidad: "info",
-        titulo: "Sin alertas críticas",
-        detalle: "El motor de IA no detectó incidencias relevantes en las últimas 24h.",
-      });
-    }
-    return items;
-  }, [horasExtras, ausentes.length, atrasos.length, empMap]);
 
   const alertasCriticas = alertas.filter((a) => a.severidad === "critica").length;
 
