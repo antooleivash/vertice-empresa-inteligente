@@ -6,6 +6,7 @@ import { formatCLP } from "@/lib/domain";
 import { detectarAlertas, alertaTone, type AlertaIA } from "@/lib/ia-engine";
 import { Card } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { QRMarcar } from "@/components/qr-marcar";
 import { Users, Clock, AlertTriangle, Wallet } from "lucide-react";
 import {
   Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer,
@@ -145,8 +146,9 @@ function Dashboard() {
         </Card>
       </div>
 
-      <Card className="p-5 mb-6">
-        <h3 className="text-sm font-semibold mb-1">Costo por área (mes actual)</h3>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+        <Card className="lg:col-span-2 p-5">
+          <h3 className="text-sm font-semibold mb-1">Costo por área (mes actual)</h3>
         <p className="text-xs text-muted-foreground mb-4">Distribución del gasto de remuneraciones según área operativa.</p>
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
