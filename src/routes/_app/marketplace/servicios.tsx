@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatCLP } from "@/lib/domain";
 import { ShoppingCart, Tag } from "lucide-react";
-import { toast } from "sonner">
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/marketplace/servicios")({ component: ServiciosPage });
 
