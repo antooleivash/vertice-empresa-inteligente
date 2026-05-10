@@ -18,8 +18,10 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+import { useIndicadores } from "@/hooks/use-indicadores";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export const Route = createFileRoute("/_app/rrhh/empleados")({ component: EmpleadosPage });
 
@@ -30,6 +32,11 @@ const empty: Partial<Empleado> = {
 
 function EmpleadosPage() {
   const [items, setItems] = useState<Empleado[]>([]);
+  const { data: indicadores } = useIndicadores();
+  const salarioMinimo = indicadores.sueldo_minimo?.valor;
+  const bajoMinimo = salarioMinimo
+    ? items.filter((e) => e.activo && e.sueldo_base > 0 && e.sueldo_base < salarioMinimo)
+    : [];
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<Partial<Empleado>>(empty);
   const [editing, setEditing] = useState<string | null>(null);
@@ -132,6 +139,15 @@ function EmpleadosPage() {
           </Dialog>
         }
       />
+      {bajoMinimo.length > 0 && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>ALERTA: Empleados con sueldo bajo el mínimo legal ({formatCLP(salarioMinimo!)})</AlertTitle>
+          <AlertDescription>
+            {bajoMinimo.map((e) => e.nombre).join(", ")} — Riesgo de multa de la Dirección del Trabajo. Ajusta el sueldo base al mínimo vigente.
+          </AlertDescription>
+        </Alert>
+      )}
       <Card className="overflow-hidden">
         <Table>
           <TableHeader>

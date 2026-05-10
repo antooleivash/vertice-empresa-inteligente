@@ -15,6 +15,8 @@ import { CartesianGrid, Legend, Line, LineChart, ReferenceDot, ResponsiveContain
 import { formatCLP } from "@/lib/domain";
 import { useLocalList, uid } from "@/lib/local-store";
 import { Plus, Pencil, Sparkles, TrendingUp, TrendingDown, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { useIndicadores } from "@/hooks/use-indicadores";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/simulador")({ component: SimuladorPage });
@@ -236,19 +238,25 @@ function NoItems() {
 /* -------------------- Tab 1: Proyección de precios -------------------- */
 
 function ProyeccionPreciosTab({ items }: { items: Item[] }) {
+  const { data: indicadores } = useIndicadores();
+  const ipcMensual = indicadores.ipc?.valor ?? 0; // % mensual
+  const ipcAnualEstimado = ipcMensual * 12;
+
   const [selId, setSelId] = useState<string>("");
   const sel = items.find((i) => i.id === selId) ?? items[0];
   const [clientes, setClientes] = useState(100);
   const [aumento, setAumento] = useState(10);
   const [perdida, setPerdida] = useState(15);
   const [costosFijos, setCostosFijos] = useState(500000);
+  const [ajusteIPC, setAjusteIPC] = useState(false);
 
   if (items.length === 0) return <NoItems />;
   if (!sel) return null;
 
+  const aumentoEfectivo = ajusteIPC ? aumento + ipcMensual : aumento;
   const precioActual = sel.precio_venta;
   const costoUnit = sel.costo_variable;
-  const precioNuevo = precioActual * (1 + aumento / 100);
+  const precioNuevo = precioActual * (1 + aumentoEfectivo / 100);
   const clientesNuevos = clientes * (1 - perdida / 100);
 
   const ingresoActual = precioActual * clientes;
@@ -257,6 +265,10 @@ function ProyeccionPreciosTab({ items }: { items: Item[] }) {
   const utilidadProy = (precioNuevo - costoUnit) * clientesNuevos - costosFijos;
   const margenProy = ingresoProy > 0 ? (utilidadProy / ingresoProy) * 100 : 0;
   const delta = utilidadProy - utilidadActual;
+
+  // Poder adquisitivo real a 6 meses descontando inflación
+  const factorInflacion6m = Math.pow(1 + ipcMensual / 100, 6);
+  const utilidadReal6m = utilidadProy / factorInflacion6m;
 
   const recomienda = delta > 0;
   const aiTitle = recomienda ? `Subir el precio ${aumento}% es conveniente` : `No se recomienda subir el precio ${aumento}%`;
@@ -280,6 +292,15 @@ function ProyeccionPreciosTab({ items }: { items: Item[] }) {
         <SliderField label="% de aumento de precio" value={aumento} min={-30} max={50} step={1} onChange={setAumento} suffix="%" />
         <SliderField label="% clientes que se perderían" value={perdida} min={0} max={80} step={1} onChange={setPerdida} suffix="%" />
         <SliderField label="Costos fijos mensuales (CLP)" value={costosFijos} min={0} max={10000000} step={50000} onChange={setCostosFijos} suffix="" format={formatCLP} />
+        <div className="flex items-center justify-between rounded-md border p-3">
+          <div>
+            <div className="text-sm font-medium">Ajuste por IPC</div>
+            <div className="text-xs text-muted-foreground">
+              Suma la inflación mensual actual ({ipcMensual.toFixed(2)}%) al aumento de precio.
+            </div>
+          </div>
+          <Switch checked={ajusteIPC} onCheckedChange={setAjusteIPC} />
+        </div>
       </Card>
 
       <div className="space-y-4">
@@ -290,6 +311,12 @@ function ProyeccionPreciosTab({ items }: { items: Item[] }) {
           <KPI title="Margen" value={`${margenProy.toFixed(1)}%`} />
         </div>
         <AICard tone={recomienda ? "good" : "bad"} title={aiTitle}>{aiBody}</AICard>
+        {ipcMensual > 0 && (
+          <AICard tone="warn" title={`Inflación actual: ${ipcMensual.toFixed(2)}% mensual (≈${ipcAnualEstimado.toFixed(1)}% anual)`}>
+            En pesos de hoy, tu ganancia real proyectada en 6 meses sería <strong>{formatCLP(utilidadReal6m)}</strong> (vs {formatCLP(utilidadProy)} nominal).
+            Para mantener tu margen real necesitas subir precios al menos <strong>{ipcMensual.toFixed(2)}% mensual</strong> (igual al IPC).
+          </AICard>
+        )}
       </div>
     </div>
   );

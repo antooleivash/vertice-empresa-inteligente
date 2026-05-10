@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEmpresa } from "@/hooks/use-empresa";
 import { Plus, FileDown, Info, CheckCircle2, History } from "lucide-react";
+import { useIndicadores } from "@/hooks/use-indicadores";
 import { toast } from "sonner";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip as RTooltip, Legend, ResponsiveContainer, CartesianGrid, ComposedChart, Line,
@@ -280,6 +281,8 @@ function ImpuestosPage() {
   return (
     <PageShell>
       <PageHeader title="Impuestos" description="Documentos tributarios, IVA débito y crédito, balance F29 mensual." />
+      <UTMBanner />
+
 
       <Alert className="mb-4 border-blue-200 bg-blue-50 text-blue-900">
         <Info className="h-4 w-4" />
@@ -554,5 +557,22 @@ function ImpuestosPage() {
         </TabsContent>
       </Tabs>
     </PageShell>
+  );
+}
+
+function UTMBanner() {
+  // import inline pour éviter circular - server-fn ok with ESM
+  const mod = require("@/hooks/use-indicadores") as typeof import("@/hooks/use-indicadores");
+  const { data } = mod.useIndicadores();
+  const utm = data.utm?.valor;
+  if (!utm) return null;
+  return (
+    <Alert className="mb-4 border-amber-200 bg-amber-50 text-amber-900">
+      <Info className="h-4 w-4" />
+      <AlertTitle>UTM vigente: {fmtCLP(utm)}</AlertTitle>
+      <AlertDescription>
+        Las multas y reajustes del SII se calculan en UTM. Mantén este valor a la vista al evaluar contingencias tributarias.
+      </AlertDescription>
+    </Alert>
   );
 }
