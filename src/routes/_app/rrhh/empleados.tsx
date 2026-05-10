@@ -168,9 +168,7 @@ function EmpleadosPage() {
                 <TableCell>{formatDate(e.fecha_ingreso)}</TableCell>
                 <TableCell className="text-right">{formatCLP(e.sueldo_base)}</TableCell>
                 <TableCell>
-                  {e.activo
-                    ? <Badge className="bg-success/15 text-success hover:bg-success/15">Activo</Badge>
-                    : <Badge variant="secondary">Inactivo</Badge>}
+                  <StatusPill label={e.activo ? "Activo" : "Inactivo"} />
                 </TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="icon" onClick={() => edit(e)}><Pencil className="h-4 w-4" /></Button>
