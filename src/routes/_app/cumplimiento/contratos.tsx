@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { StatusPill } from "@/components/status-pill";
 import { Plus, Trash2, FileText, FileDown } from "lucide-react";
 import { useIndicadores } from "@/hooks/use-indicadores";
 import { toast } from "sonner";
@@ -129,7 +130,7 @@ function ContratosPage() {
                   <TableCell className="text-right">{formatCLP(c.sueldo_base)}</TableCell>
                   <TableCell className="text-right text-muted-foreground tabular-nums">{ufActual ? (c.sueldo_base / ufActual).toFixed(2) + " UF" : "—"}</TableCell>
                   <TableCell>
-                    <Badge variant={est.variant}>{est.label}{est.days !== null && est.label === "Por vencer" ? ` (${est.days}d)` : ""}</Badge>
+                    <StatusPill label={`${est.label}${est.days !== null && est.label === "Por vencer" ? ` (${est.days}d)` : ""}`} />
                   </TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="icon" onClick={() => window.open(`/print/contrato/${c.id}`, "_blank")} title="Descargar contrato PDF"><FileDown className="h-4 w-4" /></Button>

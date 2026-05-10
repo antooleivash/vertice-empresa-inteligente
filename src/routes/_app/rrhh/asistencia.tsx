@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { StatusPill } from "@/components/status-pill";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -110,7 +111,7 @@ function AsistenciaPage() {
                 <TableCell>{empleadosMap.get(a.empleado_id)?.nombre ?? "—"}</TableCell>
                 <TableCell>{a.entrada ?? "—"}</TableCell>
                 <TableCell>{a.salida ?? "—"}</TableCell>
-                <TableCell><Badge className={tone(a.estado)}>{a.estado}</Badge></TableCell>
+                <TableCell><StatusPill label={a.estado} /></TableCell>
                 <TableCell className="text-right"><Button variant="ghost" size="icon" onClick={() => remove(a.id)}><Trash2 className="h-4 w-4" /></Button></TableCell>
               </TableRow>
             ))}

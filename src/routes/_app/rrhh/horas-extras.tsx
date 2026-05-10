@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { StatusPill } from "@/components/status-pill";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -98,9 +99,7 @@ function HorasExtrasPage() {
                 <TableCell>{formatDate(h.fecha)}</TableCell>
                 <TableCell>{empleadosMap.get(h.empleado_id)?.nombre ?? "—"}</TableCell>
                 <TableCell>{h.horas}</TableCell>
-                <TableCell>{h.autorizadas
-                  ? <Badge className="bg-success/15 text-success">Autorizada</Badge>
-                  : <Badge className="bg-destructive/15 text-destructive">Sin autorizar</Badge>}</TableCell>
+                <TableCell><StatusPill label={h.autorizadas ? "Autorizada" : "Sin autorizar"} /></TableCell>
                 <TableCell className="text-sm text-muted-foreground">{h.motivo ?? "—"}</TableCell>
                 <TableCell className="text-right"><Button variant="ghost" size="icon" onClick={() => remove(h.id)}><Trash2 className="h-4 w-4" /></Button></TableCell>
               </TableRow>

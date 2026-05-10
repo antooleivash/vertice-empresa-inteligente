@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { StatusPill } from "@/components/status-pill";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEmpresa } from "@/hooks/use-empresa";
 import { Plus, FileDown, Info, CheckCircle2, History } from "lucide-react";
@@ -524,9 +525,7 @@ function ImpuestosPage() {
                         {fmtCLP(Math.abs(bal))} {bal >= 0 ? "a pagar" : "a favor"}
                       </TableCell>
                       <TableCell>
-                        {decl?.estado === "Declarado"
-                          ? <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Declarado</Badge>
-                          : <Badge variant="outline">Pendiente</Badge>}
+                        <StatusPill label={decl?.estado === "Declarado" ? "Declarado" : "Pendiente"} />
                       </TableCell>
                       <TableCell>
                         {decl?.estado !== "Declarado" && (

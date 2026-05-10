@@ -18,6 +18,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { StatusPill } from "@/components/status-pill";
 import { Pencil, Plus, Trash2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { useIndicadores } from "@/hooks/use-indicadores";

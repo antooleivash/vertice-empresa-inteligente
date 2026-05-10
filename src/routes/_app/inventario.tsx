@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { StatusPill } from "@/components/status-pill";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -153,10 +154,7 @@ function ProductosTab({
                   <TableCell className="text-right">{p.stock} {p.unidad}</TableCell>
                   <TableCell className="text-right">{p.stock_minimo}</TableCell>
                   <TableCell>
-                    <Badge variant={e.variant}>
-                      {e.variant === "destructive" && <AlertTriangle className="h-3 w-3 mr-1" />}
-                      {e.label}
-                    </Badge>
+                    <StatusPill label={e.label} tone={e.variant === "destructive" ? "danger" : e.variant === "secondary" ? "warning" : "success"} />
                   </TableCell>
                   <TableCell className="text-right">
                     <Button size="sm" variant="ghost" onClick={() => setHistorialId(p.id)}>Historial</Button>
@@ -293,7 +291,7 @@ function ActivosTab({ activos, setActivos }: { activos: Activo[]; setActivos: (n
                   <TableCell className="text-right text-muted-foreground">{formatCLP(d.acumulada)}</TableCell>
                   <TableCell className="text-right font-medium">{formatCLP(d.actual)}</TableCell>
                   <TableCell>
-                    <Badge variant={a.estado === "En uso" ? "default" : a.estado === "En mantención" ? "secondary" : "destructive"}>{a.estado}</Badge>
+                    <StatusPill label={a.estado} tone={a.estado === "En uso" ? "success" : a.estado === "En mantención" ? "warning" : "danger"} />
                   </TableCell>
                 </TableRow>
               );

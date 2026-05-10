@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { StatusPill } from "@/components/status-pill";
 import { Plus, Printer, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -104,7 +105,7 @@ function CartasPage() {
               <TableRow key={c.id}>
                 <TableCell>{formatDate(c.fecha)}</TableCell>
                 <TableCell>{empleadosMap.get(c.empleado_id)?.nombre ?? "—"}</TableCell>
-                <TableCell><Badge className={tone(c.tipo)}>{c.tipo}</Badge></TableCell>
+                <TableCell><StatusPill label={c.tipo} /></TableCell>
                 <TableCell className="max-w-md truncate">{c.motivo}</TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="icon" onClick={() => print(c.id)}><Printer className="h-4 w-4" /></Button>
