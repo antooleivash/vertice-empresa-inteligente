@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MarcarRouteImport } from './routes/marcar'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
@@ -33,6 +34,11 @@ import { Route as AppFinanzasPresupuestoRouteImport } from './routes/_app/finanz
 import { Route as AppFinanzasFlujoCajaRouteImport } from './routes/_app/finanzas/flujo-caja'
 import { Route as AppFinanzasCostosRouteImport } from './routes/_app/finanzas/costos'
 
+const MarcarRoute = MarcarRouteImport.update({
+  id: '/marcar',
+  path: '/marcar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -154,6 +160,7 @@ const AppFinanzasCostosRoute = AppFinanzasCostosRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
+  '/marcar': typeof MarcarRoute
   '/finanzas/costos': typeof AppFinanzasCostosRoute
   '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
   '/finanzas/presupuesto': typeof AppFinanzasPresupuestoRoute
@@ -177,6 +184,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/marcar': typeof MarcarRoute
   '/': typeof AppIndexRoute
   '/finanzas/costos': typeof AppFinanzasCostosRoute
   '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
@@ -203,6 +211,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/marcar': typeof MarcarRoute
   '/_app/': typeof AppIndexRoute
   '/_app/finanzas/costos': typeof AppFinanzasCostosRoute
   '/_app/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
@@ -230,6 +239,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/marcar'
     | '/finanzas/costos'
     | '/finanzas/flujo-caja'
     | '/finanzas/presupuesto'
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
+    | '/marcar'
     | '/'
     | '/finanzas/costos'
     | '/finanzas/flujo-caja'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/login'
+    | '/marcar'
     | '/_app/'
     | '/_app/finanzas/costos'
     | '/_app/finanzas/flujo-caja'
@@ -304,11 +316,19 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  MarcarRoute: typeof MarcarRoute
   PrintTipoIdRoute: typeof PrintTipoIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/marcar': {
+      id: '/marcar'
+      path: '/marcar'
+      fullPath: '/marcar'
+      preLoaderRoute: typeof MarcarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -524,6 +544,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  MarcarRoute: MarcarRoute,
   PrintTipoIdRoute: PrintTipoIdRoute,
 }
 export const routeTree = rootRouteImport
