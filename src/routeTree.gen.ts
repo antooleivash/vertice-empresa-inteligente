@@ -13,6 +13,7 @@ import { Route as PortalRouteImport } from './routes/portal'
 import { Route as MarcarRouteImport } from './routes/marcar'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortalPermisosRouteImport } from './routes/portal.permisos'
 import { Route as PortalLiquidacionesRouteImport } from './routes/portal.liquidaciones'
 import { Route as PortalDocumentosRouteImport } from './routes/portal.documentos'
@@ -64,6 +65,11 @@ const LoginRoute = LoginRouteImport.update({
 } as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortalPermisosRoute = PortalPermisosRouteImport.update({
@@ -238,7 +244,7 @@ const AppConfiguracionEmpresaRoute = AppConfiguracionEmpresaRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AppRouteWithChildren
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
@@ -277,7 +283,7 @@ export interface FileRoutesByFullPath {
   '/print/$tipo/$id': typeof PrintTipoIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof AppRouteWithChildren
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
@@ -317,6 +323,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
@@ -436,6 +443,7 @@ export interface FileRouteTypes {
     | '/print/$tipo/$id'
   id:
     | '__root__'
+    | '/'
     | '/_app'
     | '/login'
     | '/marcar'
@@ -476,6 +484,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   MarcarRoute: typeof MarcarRoute
@@ -511,6 +520,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portal/permisos': {
@@ -829,6 +845,7 @@ const PortalRouteWithChildren =
   PortalRoute._addFileChildren(PortalRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   MarcarRoute: MarcarRoute,
@@ -838,13 +855,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
