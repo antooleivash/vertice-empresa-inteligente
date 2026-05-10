@@ -138,7 +138,7 @@ function ContratosPage() {
                 </TableRow>
               );
             })}
-            {items.length === 0 && <TableRow><TableCell colSpan={8} className="text-center py-10 text-muted-foreground"><FileText className="h-6 w-6 mx-auto mb-2 opacity-40" />Sin contratos registrados.</TableCell></TableRow>}
+            {items.length === 0 && <TableRow><TableCell colSpan={9} className="text-center py-10 text-muted-foreground"><FileText className="h-6 w-6 mx-auto mb-2 opacity-40" />Sin contratos registrados.</TableCell></TableRow>}
           </TableBody>
         </Table>
       </Card>
