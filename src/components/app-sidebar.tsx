@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Users, Clock, Timer, FileWarning, Receipt, CalendarDays,
   Wallet, TrendingUp, Target, Activity, Gauge, Sparkles, Bell, Megaphone,
   Briefcase, UserSearch, Store, Truck, LogOut, Building2, BarChart3, ArrowDownCircle, ArrowUpCircle,
-  Shield, FileSignature, FileCheck2, ShieldAlert, Settings, Package, Scale,
+  Shield, FileSignature, FileCheck2, ShieldAlert, Settings, Package, Scale, ShoppingCart,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useEmpresa } from "@/hooks/use-empresa";
@@ -29,6 +29,7 @@ const sections: Section[] = [
     title: "Finanzas",
     items: [
       { to: "/finanzas/dashboard", label: "Dashboard financiero", icon: BarChart3 },
+      { to: "/caja", label: "Caja y ventas", icon: ShoppingCart },
       { to: "/finanzas/costos", label: "Costos", icon: Wallet },
       { to: "/finanzas/gastos", label: "Gastos", icon: ArrowDownCircle },
       { to: "/finanzas/ingresos", label: "Ingresos", icon: ArrowUpCircle },
