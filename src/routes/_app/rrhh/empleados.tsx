@@ -139,6 +139,15 @@ function EmpleadosPage() {
           </Dialog>
         }
       />
+      {bajoMinimo.length > 0 && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>ALERTA: Empleados con sueldo bajo el mínimo legal ({formatCLP(salarioMinimo!)})</AlertTitle>
+          <AlertDescription>
+            {bajoMinimo.map((e) => e.nombre).join(", ")} — Riesgo de multa de la Dirección del Trabajo. Ajusta el sueldo base al mínimo vigente.
+          </AlertDescription>
+        </Alert>
+      )}
       <Card className="overflow-hidden">
         <Table>
           <TableHeader>
