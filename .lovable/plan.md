@@ -1,123 +1,126 @@
-# Portal de Autoservicio del Empleado
+## Plan: Liquidación BUK-style + Configuración de empresa con logo
 
-Construiremos un sistema de roles que separa la experiencia entre **Admin/RRHH** (dashboard Vértice completo) y **Empleado** (portal móvil simplificado). El sistema reutiliza el login actual y redirige según el rol detectado.
+### 1. Base de datos (migración SQL)
 
-## 1. Cambios en base de datos (SQL a ejecutar)
-
-Necesitas ejecutar en Lovable Cloud:
-
+**Tabla nueva `empresa_config`** (singleton, 1 fila):
 ```sql
--- Rol y vínculo con auth.users
-alter table empleados add column if not exists rol text default 'empleado';
-alter table empleados add column if not exists user_id uuid references auth.users(id);
-alter table empleados add column if not exists foto_url text;
-
-create index if not exists empleados_user_id_idx on empleados(user_id);
-
--- Solicitudes de permisos/vacaciones (si no existe ya vacaciones_permisos)
-create table if not exists solicitudes_permisos (
-  id uuid default gen_random_uuid() primary key,
-  empleado_id uuid references empleados(id) on delete cascade,
-  tipo text not null,
-  fecha_inicio date not null,
-  fecha_fin date not null,
-  motivo text,
-  estado text default 'Pendiente',
-  created_at timestamptz default now()
+create table empresa_config (
+  id uuid primary key default gen_random_uuid(),
+  nombre text default 'Mi Empresa S.A.',
+  rut text, direccion text, telefono text,
+  web text, ciudad text default 'Puerto Montt',
+  logo_url text,
+  updated_at timestamptz default now()
 );
-
-alter table solicitudes_permisos enable row level security;
-
--- Función security definer para evitar recursión
-create or replace function public.is_admin(_uid uuid)
-returns boolean language sql stable security definer set search_path=public as $$
-  select exists(select 1 from empleados where user_id = _uid and rol in ('admin','supervisor'))
-$$;
-
--- Políticas: empleado ve lo suyo, admin ve todo
-create policy "emp own solicitudes" on solicitudes_permisos for all to authenticated
-  using (empleado_id in (select id from empleados where user_id = auth.uid()) or public.is_admin(auth.uid()))
-  with check (empleado_id in (select id from empleados where user_id = auth.uid()) or public.is_admin(auth.uid()));
-
--- Liquidaciones: empleado solo las suyas
-drop policy if exists "auth full" on liquidaciones;
-create policy "liq access" on liquidaciones for all to authenticated
-  using (empleado_id in (select id from empleados where user_id = auth.uid()) or public.is_admin(auth.uid()));
-
--- Asistencia: empleado puede marcar la suya
-drop policy if exists "auth full" on asistencia;
-create policy "asist access" on asistencia for all to authenticated
-  using (empleado_id in (select id from empleados where user_id = auth.uid()) or public.is_admin(auth.uid()))
-  with check (empleado_id in (select id from empleados where user_id = auth.uid()) or public.is_admin(auth.uid()));
+-- RLS full access authenticated
 ```
 
-## 2. Detección de rol en el login
+**Bucket storage** `empresa-assets` (público) para el logo.
 
-Extender `useAuth` para cargar el registro de `empleados` por `user_id` cuando hay sesión. Expone `empleado` y `rol`.
+**Ampliar tabla `liquidaciones`** con columnas BUK:
+- `afp` text default 'Habitat'
+- `salud` text default 'Fonasa'  
+- `salud_monto` integer default 0 (Isapre UF/CLP fijo)
+- `dias_trabajados` int default 30
+- `dias_inasistencia` int default 0
+- `horas_extras` numeric default 0
+- `gratificacion` int default 0
+- `asignacion_familiar` int default 0
+- `anticipo` int default 0
+- `cotiz_prevision` int, `cotiz_salud` int, `seguro_cesantia` int, `impuesto_unico` int
+- `total_haberes` int, `total_descuentos` int
+- `otros_bonos` jsonb default '[]' — `[{concepto, monto}]`
+- `otros_descuentos` jsonb default '[]`
+- `uf_valor` int default 39000
 
-`/_app.tsx` (layout actual) → si `rol === 'empleado'`, redirige a `/portal`. Si admin/supervisor, mantiene dashboard.
+### 2. Cálculos automáticos (helper `src/lib/payroll.ts`)
 
-## 3. Nuevo layout `/portal` (móvil)
+```
+gratificacion = round(sueldo_base * 0.25), tope mensual aprox $209.396
+total_imponible = sueldo_base + gratificacion + bonos imponibles + horas_extras
+cotiz_prevision = total_imponible * tasa_AFP (Habitat 11.27%, Capital 11.44%, etc.)
+cotiz_salud    = max(total_imponible * 0.07, salud_monto Isapre)
+seguro_cesantia= total_imponible * 0.006
+impuesto_unico = tabla SII simplificada (tramos UTM)
+descuentos_legales = suma anteriores
+total_haberes      = total_imponible + asignacion_familiar
+total_descuentos   = descuentos_legales + anticipo + suma(otros_descuentos)
+liquido            = total_haberes − total_descuentos
+```
 
-Estructura:
+### 3. Configuración de empresa
+
+- Nueva ruta `src/routes/_app/configuracion/empresa.tsx`: formulario (nombre, RUT, dirección, teléfono, web, ciudad) + uploader de logo a Storage. Guarda/actualiza fila singleton.
+- Item en sidebar "Configuración → Empresa" (icono Building2).
+- Hook `src/hooks/use-empresa.ts` que carga la config y la cachea.
+- Header de la app (`app-sidebar.tsx`): muestra logo si existe, si no, el nombre.
+
+### 4. Formulario de liquidación rediseñado
+
+Reescribir `src/routes/_app/rrhh/liquidaciones.tsx` con un Dialog en pestañas o secciones:
+
+- **Datos básicos**: empleado, periodo, sueldo base
+- **Asistencia**: días trabajados, inasistencia, horas extras
+- **Previsión**: AFP (select 6 opciones), Salud (Fonasa/Isapre + monto)
+- **Bonos**: lista dinámica `{concepto, monto}` (botón +/–)
+- **Descuentos**: anticipo + lista dinámica de otros descuentos
+- Recálculo en vivo mostrando total haberes / descuentos / líquido
+
+### 5. PDF estilo BUK
+
+Reescribir `ContratoContent`/agregar nuevo `LiqContent` en `src/routes/print.$tipo.$id.tsx`:
 
 ```text
-src/routes/_portal.tsx          → layout con guard de rol empleado
-src/routes/_portal/index.tsx    → redirige a asistencia
-src/routes/_portal/asistencia.tsx
-src/routes/_portal/permisos.tsx
-src/routes/_portal/liquidaciones.tsx
-src/routes/_portal/documentos.tsx
+┌────────────────────────────────────┬──────────┐
+│ LIQUIDACIÓN DE SUELDO              │  [LOGO]  │
+│ Empleador: Empresa (RUT)           │          │
+│ Empresa · Gerencia · Mes           │          │
+├──────────────┬───────────┬─────────┴──────────┤
+│ Sr(a)/RUT    │ Tipo cont │ Previsión: AFP X  │
+│ Cargo/CCosto │ Días/HE   │ Salud: Fonasa     │
+│ Sueldo Base  │ Inasist   │ UF: $XX.XXX       │
+├──────────────┴───────────┴────────────────────┤
+│ HABERES                  │ DESCUENTOS         │
+│ Imponibles  (subtotal)   │ Legales (subtotal)│
+│  Sueldo Base             │  Previsión 11.27% │
+│  Gratificación 25%       │  Salud 7%          │
+│  Horas Extras 50%        │  Cesantía 0.6%     │
+│  Otros bonos…            │  Impto Único       │
+│ No Imponibles            │ Otros              │
+│  Asig. Familiar          │  Anticipo          │
+│                          │  Otros descuentos  │
+├──────────────────────────┴────────────────────┤
+│ TOTAL HABERES   |  TOTAL DESCUENTOS           │
+│ IMP.PREV/SALUD  |  IMP.CES  |  BASE TRIBUT.   │
+│ ╔═════════════════════════════════════════╗   │
+│ ║ LÍQUIDO A RECIBIR:  $X.XXX.XXX         ║   │
+│ ╚═════════════════════════════════════════╝   │
+│ Certifico que he recibido de [empresa]…       │
+│                                               │
+│           ___________________                 │
+│              FIRMA CONFORME                   │
+└───────────────────────────────────────────────┘
 ```
 
-Layout:
-- Header con foto + nombre del empleado
-- `<Outlet />` para sección activa
-- Bottom nav fija con 4 íconos: Asistencia, Permisos, Liquidaciones, Documentos
-- Diseño optimizado para 375px (iPhone), botones grandes (h-14), tipografía legible
+- Carga `empresa_config` para logo + datos
+- Logo a la derecha del header (max-h 60px)
+- Si no hay logo → nombre empresa en texto grande
+- Formato CLP con puntos: `$1.234.567`
+- Fonts: serif tipo BUK, tamaño compacto
 
-## 4. Las 4 secciones
+### 6. Archivos
 
-**Asistencia (`/portal/asistencia`)**
-- Botón grande "Marcar entrada" o "Marcar salida" (según último registro del día)
-- Solicita cámara → captura foto → solicita GPS → guarda en tabla `asistencia` con `foto_url`, `lat`, `lng`
-- Lista de marcas del mes en curso con hora entrada/salida
+**Crear:**
+- `src/lib/payroll.ts` (cálculos AFP/salud/cesantía/impuesto)
+- `src/hooks/use-empresa.ts`
+- `src/routes/_app/configuracion/empresa.tsx`
 
-**Permisos (`/portal/permisos`)**
-- Botón "Solicitar permiso o vacaciones" → modal con tipo, fechas, motivo
-- Lista de solicitudes con badge de estado
-- Admin ve un panel nuevo en `/rrhh/vacaciones` para aprobar/rechazar
+**Editar:**
+- `src/routes/_app/rrhh/liquidaciones.tsx` (form completo + recálculo)
+- `src/routes/print.$tipo.$id.tsx` (LiqContent BUK + carga empresa)
+- `src/lib/domain.ts` (tipo Liquidacion ampliado, EmpresaConfig)
+- `src/components/app-sidebar.tsx` (item Configuración + logo en header)
 
-**Liquidaciones (`/portal/liquidaciones`)**
-- Lista de sus liquidaciones (filtradas por RLS)
-- Botón descarga PDF reutilizando `/print/liquidacion/:id`
+### 7. Acción del usuario
 
-**Documentos (`/portal/documentos`)**
-- Lista contratos del empleado con descarga PDF
-- Lista documentos legales (ODI, reglamento) con estado entregado/pendiente
-
-## 5. Vinculación auth.users ↔ empleados
-
-En `/rrhh/empleados`, agregar campo "Email" al crear empleado y un botón "Crear acceso" que invoca un server function (admin) para crear el usuario en Supabase Auth y guardar el `user_id` en empleados. También campo "Rol" en el formulario.
-
-## Detalles técnicos
-
-- Hook `useCurrentEmpleado()` que lee `empleados` por `user_id` y cachea
-- `_app.tsx` y `_portal.tsx` se gatean entre sí según rol; ambos requieren sesión
-- Subida de fotos a bucket `asistencia-fotos` (crear bucket público)
-- `solicitudes_permisos` reemplaza/complementa `vacaciones_permisos` actual; mantenemos el nombre nuevo para evitar conflictos con la página existente
-- RLS reescrita para liquidaciones y asistencia (antes era `auth full`)
-- Aprobación: pantalla admin en `/rrhh/vacaciones` muestra solicitudes con botones Aprobar/Rechazar que actualizan `estado`
-
-## Archivos a crear/editar
-
-Crear:
-- `src/routes/_portal.tsx`, `_portal/index.tsx`, `_portal/asistencia.tsx`, `_portal/permisos.tsx`, `_portal/liquidaciones.tsx`, `_portal/documentos.tsx`
-- `src/components/portal-bottom-nav.tsx`
-- `src/hooks/use-current-empleado.ts`
-
-Editar:
-- `src/hooks/use-auth.tsx` (exponer empleado/rol)
-- `src/routes/_app.tsx` (redirigir empleados a /portal)
-- `src/routes/_app/rrhh/empleados.tsx` (campos rol, email, user_id)
-- `src/routes/_app/rrhh/vacaciones.tsx` (panel aprobación)
+Después de aplicar la migración: subir el logo en **Configuración → Empresa**. Mientras no esté subido, los PDFs muestran el nombre como texto.

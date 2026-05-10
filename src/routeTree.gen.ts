@@ -45,6 +45,7 @@ import { Route as AppCumplimientoJornadaRouteImport } from './routes/_app/cumpli
 import { Route as AppCumplimientoDocumentosRouteImport } from './routes/_app/cumplimiento/documentos'
 import { Route as AppCumplimientoContratosRouteImport } from './routes/_app/cumplimiento/contratos'
 import { Route as AppCumplimientoAlertasRouteImport } from './routes/_app/cumplimiento/alertas'
+import { Route as AppConfiguracionEmpresaRouteImport } from './routes/_app/configuracion/empresa'
 
 const PortalRoute = PortalRouteImport.update({
   id: '/portal',
@@ -230,6 +231,11 @@ const AppCumplimientoAlertasRoute = AppCumplimientoAlertasRouteImport.update({
   path: '/cumplimiento/alertas',
   getParentRoute: () => AppRoute,
 } as any)
+const AppConfiguracionEmpresaRoute = AppConfiguracionEmpresaRouteImport.update({
+  id: '/configuracion/empresa',
+  path: '/configuracion/empresa',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -240,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/portal/documentos': typeof PortalDocumentosRoute
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
   '/portal/permisos': typeof PortalPermisosRoute
+  '/configuracion/empresa': typeof AppConfiguracionEmpresaRoute
   '/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
   '/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
   '/cumplimiento/documentos': typeof AppCumplimientoDocumentosRoute
@@ -277,6 +284,7 @@ export interface FileRoutesByTo {
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
   '/portal/permisos': typeof PortalPermisosRoute
   '/': typeof AppIndexRoute
+  '/configuracion/empresa': typeof AppConfiguracionEmpresaRoute
   '/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
   '/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
   '/cumplimiento/documentos': typeof AppCumplimientoDocumentosRoute
@@ -316,6 +324,7 @@ export interface FileRoutesById {
   '/portal/liquidaciones': typeof PortalLiquidacionesRoute
   '/portal/permisos': typeof PortalPermisosRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/configuracion/empresa': typeof AppConfiguracionEmpresaRoute
   '/_app/cumplimiento/alertas': typeof AppCumplimientoAlertasRoute
   '/_app/cumplimiento/contratos': typeof AppCumplimientoContratosRoute
   '/_app/cumplimiento/documentos': typeof AppCumplimientoDocumentosRoute
@@ -355,6 +364,7 @@ export interface FileRouteTypes {
     | '/portal/documentos'
     | '/portal/liquidaciones'
     | '/portal/permisos'
+    | '/configuracion/empresa'
     | '/cumplimiento/alertas'
     | '/cumplimiento/contratos'
     | '/cumplimiento/documentos'
@@ -392,6 +402,7 @@ export interface FileRouteTypes {
     | '/portal/liquidaciones'
     | '/portal/permisos'
     | '/'
+    | '/configuracion/empresa'
     | '/cumplimiento/alertas'
     | '/cumplimiento/contratos'
     | '/cumplimiento/documentos'
@@ -430,6 +441,7 @@ export interface FileRouteTypes {
     | '/portal/liquidaciones'
     | '/portal/permisos'
     | '/_app/'
+    | '/_app/configuracion/empresa'
     | '/_app/cumplimiento/alertas'
     | '/_app/cumplimiento/contratos'
     | '/_app/cumplimiento/documentos'
@@ -721,11 +733,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCumplimientoAlertasRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/configuracion/empresa': {
+      id: '/_app/configuracion/empresa'
+      path: '/configuracion/empresa'
+      fullPath: '/configuracion/empresa'
+      preLoaderRoute: typeof AppConfiguracionEmpresaRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
+  AppConfiguracionEmpresaRoute: typeof AppConfiguracionEmpresaRoute
   AppCumplimientoAlertasRoute: typeof AppCumplimientoAlertasRoute
   AppCumplimientoContratosRoute: typeof AppCumplimientoContratosRoute
   AppCumplimientoDocumentosRoute: typeof AppCumplimientoDocumentosRoute
@@ -756,6 +776,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
+  AppConfiguracionEmpresaRoute: AppConfiguracionEmpresaRoute,
   AppCumplimientoAlertasRoute: AppCumplimientoAlertasRoute,
   AppCumplimientoContratosRoute: AppCumplimientoContratosRoute,
   AppCumplimientoDocumentosRoute: AppCumplimientoDocumentosRoute,
@@ -813,13 +834,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
