@@ -19,6 +19,8 @@ import { Route as AppRrhhHorasExtrasRouteImport } from './routes/_app/rrhh/horas
 import { Route as AppRrhhEmpleadosRouteImport } from './routes/_app/rrhh/empleados'
 import { Route as AppRrhhCartasRouteImport } from './routes/_app/rrhh/cartas'
 import { Route as AppRrhhAsistenciaRouteImport } from './routes/_app/rrhh/asistencia'
+import { Route as AppFinanzasFlujoCajaRouteImport } from './routes/_app/finanzas/flujo-caja'
+import { Route as AppFinanzasCostosRouteImport } from './routes/_app/finanzas/costos'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -69,10 +71,22 @@ const AppRrhhAsistenciaRoute = AppRrhhAsistenciaRouteImport.update({
   path: '/rrhh/asistencia',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFinanzasFlujoCajaRoute = AppFinanzasFlujoCajaRouteImport.update({
+  id: '/finanzas/flujo-caja',
+  path: '/finanzas/flujo-caja',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanzasCostosRoute = AppFinanzasCostosRouteImport.update({
+  id: '/finanzas/costos',
+  path: '/finanzas/costos',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
+  '/finanzas/costos': typeof AppFinanzasCostosRoute
+  '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
   '/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
   '/rrhh/cartas': typeof AppRrhhCartasRoute
   '/rrhh/empleados': typeof AppRrhhEmpleadosRoute
@@ -84,6 +98,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/': typeof AppIndexRoute
+  '/finanzas/costos': typeof AppFinanzasCostosRoute
+  '/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
   '/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
   '/rrhh/cartas': typeof AppRrhhCartasRoute
   '/rrhh/empleados': typeof AppRrhhEmpleadosRoute
@@ -97,6 +113,8 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/finanzas/costos': typeof AppFinanzasCostosRoute
+  '/_app/finanzas/flujo-caja': typeof AppFinanzasFlujoCajaRoute
   '/_app/rrhh/asistencia': typeof AppRrhhAsistenciaRoute
   '/_app/rrhh/cartas': typeof AppRrhhCartasRoute
   '/_app/rrhh/empleados': typeof AppRrhhEmpleadosRoute
@@ -110,6 +128,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/finanzas/costos'
+    | '/finanzas/flujo-caja'
     | '/rrhh/asistencia'
     | '/rrhh/cartas'
     | '/rrhh/empleados'
@@ -121,6 +141,8 @@ export interface FileRouteTypes {
   to:
     | '/login'
     | '/'
+    | '/finanzas/costos'
+    | '/finanzas/flujo-caja'
     | '/rrhh/asistencia'
     | '/rrhh/cartas'
     | '/rrhh/empleados'
@@ -133,6 +155,8 @@ export interface FileRouteTypes {
     | '/_app'
     | '/login'
     | '/_app/'
+    | '/_app/finanzas/costos'
+    | '/_app/finanzas/flujo-caja'
     | '/_app/rrhh/asistencia'
     | '/_app/rrhh/cartas'
     | '/_app/rrhh/empleados'
@@ -220,11 +244,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRrhhAsistenciaRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/finanzas/flujo-caja': {
+      id: '/_app/finanzas/flujo-caja'
+      path: '/finanzas/flujo-caja'
+      fullPath: '/finanzas/flujo-caja'
+      preLoaderRoute: typeof AppFinanzasFlujoCajaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/finanzas/costos': {
+      id: '/_app/finanzas/costos'
+      path: '/finanzas/costos'
+      fullPath: '/finanzas/costos'
+      preLoaderRoute: typeof AppFinanzasCostosRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
+  AppFinanzasCostosRoute: typeof AppFinanzasCostosRoute
+  AppFinanzasFlujoCajaRoute: typeof AppFinanzasFlujoCajaRoute
   AppRrhhAsistenciaRoute: typeof AppRrhhAsistenciaRoute
   AppRrhhCartasRoute: typeof AppRrhhCartasRoute
   AppRrhhEmpleadosRoute: typeof AppRrhhEmpleadosRoute
@@ -235,6 +275,8 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
+  AppFinanzasCostosRoute: AppFinanzasCostosRoute,
+  AppFinanzasFlujoCajaRoute: AppFinanzasFlujoCajaRoute,
   AppRrhhAsistenciaRoute: AppRrhhAsistenciaRoute,
   AppRrhhCartasRoute: AppRrhhCartasRoute,
   AppRrhhEmpleadosRoute: AppRrhhEmpleadosRoute,
@@ -253,3 +295,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
