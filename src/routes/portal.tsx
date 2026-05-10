@@ -20,7 +20,7 @@ function PortalLayout() {
 
   useEffect(() => {
     if (!loading && !empLoading && user && isAdmin) {
-      navigate({ to: "/" });
+      navigate({ to: "/dashboard" });
     }
   }, [loading, empLoading, user, isAdmin, navigate]);
 
