@@ -29,6 +29,7 @@ const sections: Section[] = [
     title: "Finanzas",
     items: [
       { to: "/finanzas/dashboard", label: "Dashboard financiero", icon: BarChart3 },
+      { to: "/caja", label: "Caja y ventas", icon: ShoppingCart },
       { to: "/finanzas/costos", label: "Costos", icon: Wallet },
       { to: "/finanzas/gastos", label: "Gastos", icon: ArrowDownCircle },
       { to: "/finanzas/ingresos", label: "Ingresos", icon: ArrowUpCircle },
