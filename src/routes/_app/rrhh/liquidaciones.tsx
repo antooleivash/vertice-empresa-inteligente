@@ -75,7 +75,7 @@ function LiquidacionesPage() {
     const payload = {
       empleado_id: form.empleado_id, periodo: form.periodo,
       sueldo_base: form.sueldo_base,
-      bonos: calc.gratificacion + form.horas_extras + form.otros_bonos.reduce((s, b) => s + (b.monto || 0), 0),
+      bonos: calc.gratificacion + form.horas_extras + (Array.isArray(form.otros_bonos) ? form.otros_bonos : []).reduce((s, b) => s + (b.monto || 0), 0),
       descuentos: calc.total_descuentos,
       liquido: calc.liquido,
       dias_trabajados: form.dias_trabajados,
