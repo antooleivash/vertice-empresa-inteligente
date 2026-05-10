@@ -138,6 +138,9 @@ function Dashboard() {
           <p className="text-xs text-muted-foreground mb-4">Detección automática del motor de inteligencia.</p>
           <div className="space-y-2">
             {alertas.slice(0, 4).map((a) => <AlertCard key={a.id} {...a} />)}
+            {alertas.length === 0 && (
+              <AlertCard severidad="info" titulo="Sin alertas detectadas" detalle="El motor IA no encontró patrones anómalos en los últimos 60 días." />
+            )}
           </div>
         </Card>
       </div>
