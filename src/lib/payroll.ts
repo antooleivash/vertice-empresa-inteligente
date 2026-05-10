@@ -53,7 +53,9 @@ function impuestoUnico(base: number): number {
 }
 
 export function calcular(input: LiqInput): LiqResult {
-  const bonosImp = input.otros_bonos.reduce((s, b) => s + (Number(b.monto) || 0), 0);
+  const bonosArr = Array.isArray(input.otros_bonos) ? input.otros_bonos : [];
+  const descArr = Array.isArray(input.otros_descuentos) ? input.otros_descuentos : [];
+  const bonosImp = bonosArr.reduce((s, b) => s + (Number(b.monto) || 0), 0);
   const gratificacion = Math.min(r(input.sueldo_base * 0.25), TOPE_GRATIF);
   const total_imponible = input.sueldo_base + gratificacion + (input.horas_extras || 0) + bonosImp;
 
@@ -69,7 +71,7 @@ export function calcular(input: LiqInput): LiqResult {
   const impuesto_unico = impuestoUnico(base_tributable);
 
   const total_haberes = total_imponible + (input.asignacion_familiar || 0);
-  const otrosDesc = input.otros_descuentos.reduce((s, d) => s + (Number(d.monto) || 0), 0);
+  const otrosDesc = descArr.reduce((s, d) => s + (Number(d.monto) || 0), 0);
   const total_descuentos =
     cotiz_prevision + cotiz_salud + seguro_cesantia + impuesto_unico + (input.anticipo || 0) + otrosDesc;
 

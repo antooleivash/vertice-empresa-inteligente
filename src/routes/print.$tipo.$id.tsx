@@ -111,8 +111,8 @@ function LiqContent({ doc, emp, empresa, contrato }: { doc: LiqFull; emp: Emplea
     return `${meses[Number(m) - 1] ?? m} ${y}`;
   })();
 
-  const otrosBonos = doc.otros_bonos ?? [];
-  const otrosDesc = doc.otros_descuentos ?? [];
+  const otrosBonos = Array.isArray(doc.otros_bonos) ? doc.otros_bonos : [];
+  const otrosDesc = Array.isArray(doc.otros_descuentos) ? doc.otros_descuentos : [];
   const totalH = doc.total_haberes ?? doc.sueldo_base + doc.bonos;
   const totalD = doc.total_descuentos ?? doc.descuentos;
   const baseTrib = (doc.sueldo_base + (doc.gratificacion ?? 0) + (doc.horas_extras ?? 0) + otrosBonos.reduce((s,b)=>s+(b.monto||0),0))
