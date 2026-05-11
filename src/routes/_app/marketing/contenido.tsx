@@ -1,97 +1,170 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { PageHeader, PageShell } from "@/components/page-shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, Copy, Loader2 } from "lucide-react";
+import { Sparkles, Copy, Loader2, Instagram } from "lucide-react";
 import { toast } from "sonner";
+import { generarContenidoInstagram } from "@/lib/contenido-ia.functions";
 
 export const Route = createFileRoute("/_app/marketing/contenido")({ component: ContenidoPage });
 
-type Tipo = "Oferta laboral" | "Post LinkedIn" | "Email interno" | "Comunicado prensa";
+const TIPOS = ["Promoción Instagram", "Tips/Consejos", "Contenido de empresa", "Oferta laboral"] as const;
+const TONOS = ["Profesional", "Cercano y directo", "Motivador", "Formal"] as const;
 
-const TEMPLATES: Record<Tipo, (t: string, c: string) => string> = {
-  "Oferta laboral": (t, c) =>
-    `🚀 ${t}\n\nEn ${c || "nuestra empresa"} buscamos talento operacional con foco en seguridad, eficiencia y trabajo colaborativo.\n\nQué ofrecemos:\n• Contrato indefinido y bonos por desempeño\n• Programa de desarrollo profesional\n• Equipos de trabajo de alto estándar\n\nPostula hoy y construyamos juntos el siguiente capítulo del rubro operacional chileno.`,
-  "Post LinkedIn": (t, c) =>
-    `${t} 🧭\n\nDesde ${c || "nuestro equipo"} compartimos un avance clave en la transformación operacional del sector.\n\nLa adopción de inteligencia artificial aplicada a RRHH, finanzas y operaciones ya no es opcional: es la frontera competitiva.\n\n#Operaciones #Innovación #Chile`,
-  "Email interno": (t, c) =>
-    `Asunto: ${t}\n\nEstimado equipo de ${c || "Vértice"},\n\nQueremos compartir avances importantes en nuestros procesos. La plataforma integrada nos permite tomar mejores decisiones con datos en tiempo real.\n\nAgradecemos su compromiso continuo.\n\nSaludos,\nGerencia`,
-  "Comunicado prensa": (t, c) =>
-    `${t}\n\n${c || "La compañía"} anuncia hoy un nuevo hito en su estrategia de digitalización operacional, consolidando su posición como referente en el ecosistema productivo chileno.\n\nEl proyecto integra HR, Finanzas, Operaciones e IA en una sola plataforma.`,
+const ESTILOS = [
+  { id: "rosa",     label: "Rosa",     gradient: "linear-gradient(135deg,#f472b6,#a855f7)" },
+  { id: "naranja",  label: "Naranja",  gradient: "linear-gradient(135deg,#fb923c,#ef4444)" },
+  { id: "azul",     label: "Azul",     gradient: "linear-gradient(135deg,#38bdf8,#1e3a8a)" },
+  { id: "verde",    label: "Verde",    gradient: "linear-gradient(135deg,#34d399,#0f766e)" },
+  { id: "violeta",  label: "Violeta",  gradient: "linear-gradient(135deg,#8b5cf6,#3b0764)" },
+  { id: "oscuro",   label: "Oscuro",   gradient: "linear-gradient(135deg,#1f2937,#000000)" },
+];
+
+type Resultado = {
+  titulo: string;
+  cuerpo: string;
+  hashtags: string;
+  emoji_principal: string;
+  cta: string;
 };
 
-type Item = { id: string; tipo: Tipo; titulo: string; contenido: string; fecha: string };
-
 function ContenidoPage() {
-  const [tipo, setTipo] = useState<Tipo>("Post LinkedIn");
-  const [titulo, setTitulo] = useState("");
-  const [contexto, setContexto] = useState("");
-  const [salida, setSalida] = useState("");
+  const generar = useServerFn(generarContenidoInstagram);
+  const [tipo, setTipo] = useState<string>(TIPOS[0]);
+  const [tono, setTono] = useState<string>(TONOS[1]);
+  const [empresa, setEmpresa] = useState("");
+  const [tema, setTema] = useState("");
+  const [estilo, setEstilo] = useState(ESTILOS[0]);
   const [loading, setLoading] = useState(false);
-  const [historial, setHistorial] = useState<Item[]>([]);
+  const [res, setRes] = useState<Resultado | null>(null);
 
-  const generar = () => {
-    if (!titulo) return toast.error("Ingresa un título o tema");
+  const onGenerar = async () => {
+    if (!tema.trim()) return toast.error("Describe el tema de la publicación");
     setLoading(true);
-    setTimeout(() => {
-      const out = TEMPLATES[tipo](titulo, contexto);
-      setSalida(out);
-      setHistorial([{ id: crypto.randomUUID(), tipo, titulo, contenido: out, fecha: new Date().toISOString() }, ...historial].slice(0, 10));
+    try {
+      const r = await generar({ data: { tipo, tono, tema, empresa } });
+      setRes(r);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Error generando contenido");
+    } finally {
       setLoading(false);
-    }, 600);
+    }
   };
 
-  const copiar = (t: string) => { navigator.clipboard.writeText(t); toast.success("Copiado"); };
+  const textoCompleto = res
+    ? `${res.emoji_principal} ${res.titulo}\n\n${res.cuerpo}\n\n${res.cta}\n\n${res.hashtags}`
+    : "";
+
+  const copiar = () => {
+    if (!textoCompleto) return;
+    navigator.clipboard.writeText(textoCompleto);
+    toast.success("Texto copiado");
+  };
 
   return (
     <PageShell>
-      <PageHeader title="Generador de contenido IA" description="Crea ofertas, posts y comunicados con plantillas inteligentes." />
+      <PageHeader title="Contenido IA para Instagram" description="Genera publicaciones reales con IA en segundos." />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card className="p-5 space-y-3">
-          <div><Label>Tipo de contenido</Label>
-            <Select value={tipo} onValueChange={(v) => setTipo(v as Tipo)}><SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>{(Object.keys(TEMPLATES) as Tipo[]).map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent></Select>
+        <Card className="p-5 space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Tipo de contenido</Label>
+              <Select value={tipo} onValueChange={setTipo}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>{TIPOS.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Tono</Label>
+              <Select value={tono} onValueChange={setTono}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>{TONOS.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+              </Select>
+            </div>
           </div>
-          <div><Label>Título / tema</Label><Input value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Ej: Operador Salmonera Senior" /></div>
-          <div><Label>Contexto (empresa, área, detalle)</Label><Textarea rows={3} value={contexto} onChange={(e) => setContexto(e.target.value)} placeholder="Ej: Vértice, área Producción, Puerto Montt" /></div>
-          <Button onClick={generar} disabled={loading} className="w-full">
+
+          <div>
+            <Label>Tema o descripción de la publicación</Label>
+            <Textarea
+              rows={5}
+              value={tema}
+              onChange={(e) => setTema(e.target.value)}
+              placeholder="Ej: Lanzamos nuevo servicio de mantenimiento industrial 24/7 en Puerto Montt con descuento de 20% el primer mes."
+            />
+          </div>
+
+          <div>
+            <Label>Nombre de empresa (opcional)</Label>
+            <Input value={empresa} onChange={(e) => setEmpresa(e.target.value)} placeholder="Ej: Vértice" />
+          </div>
+
+          <div>
+            <Label className="mb-2 block">Estilo visual de la tarjeta</Label>
+            <div className="grid grid-cols-6 gap-2">
+              {ESTILOS.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => setEstilo(s)}
+                  title={s.label}
+                  className={`h-10 rounded-md border-2 transition ${estilo.id === s.id ? "border-foreground scale-105" : "border-transparent"}`}
+                  style={{ background: s.gradient }}
+                />
+              ))}
+            </div>
+          </div>
+
+          <Button onClick={onGenerar} disabled={loading} className="w-full">
             {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
             Generar con IA
           </Button>
         </Card>
 
-        <Card className="p-5">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-medium">Resultado</div>
-            {salida && <Button variant="ghost" size="sm" onClick={() => copiar(salida)}><Copy className="h-3 w-3 mr-1" />Copiar</Button>}
-          </div>
-          <Textarea rows={14} value={salida} onChange={(e) => setSalida(e.target.value)} placeholder="El contenido generado aparecerá aquí…" className="font-mono text-sm" />
-        </Card>
-      </div>
-
-      {historial.length > 0 && (
-        <Card className="p-5 mt-6">
-          <div className="text-sm font-medium mb-3">Historial reciente</div>
-          <div className="space-y-2">
-            {historial.map((h) => (
-              <div key={h.id} className="flex items-center justify-between gap-3 p-2 rounded hover:bg-muted/50">
-                <div className="flex items-center gap-2 min-w-0">
-                  <Badge variant="outline">{h.tipo}</Badge>
-                  <div className="text-sm truncate">{h.titulo}</div>
+        <div className="space-y-3">
+          <Card className="p-4">
+            <div className="flex items-center gap-2 mb-3 text-sm text-muted-foreground">
+              <Instagram className="h-4 w-4" /> Vista previa
+            </div>
+            <div
+              className="aspect-square w-full rounded-lg p-6 flex flex-col justify-between text-white shadow-lg overflow-hidden"
+              style={{ background: estilo.gradient }}
+            >
+              <div className="text-5xl">{res?.emoji_principal ?? "✨"}</div>
+              <div className="space-y-3">
+                <div className="text-2xl font-bold leading-tight drop-shadow">
+                  {res?.titulo || "Tu título aparecerá aquí"}
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => setSalida(h.contenido)}>Ver</Button>
+                <div className="text-sm leading-snug opacity-95 line-clamp-4 whitespace-pre-line">
+                  {res?.cuerpo || "El cuerpo de la publicación se mostrará aquí cuando generes el contenido con IA."}
+                </div>
+                {res?.cta && (
+                  <div className="inline-block bg-white/20 backdrop-blur px-3 py-1.5 rounded-full text-xs font-semibold">
+                    {res.cta}
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
-        </Card>
-      )}
+            </div>
+          </Card>
+
+          {res && (
+            <Card className="p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-medium">Texto completo</div>
+                <Button size="sm" variant="ghost" onClick={copiar}><Copy className="h-3 w-3 mr-1" />Copiar</Button>
+              </div>
+              <Textarea readOnly rows={10} value={textoCompleto} className="font-mono text-xs" />
+              <div className="text-xs text-muted-foreground">{res.hashtags}</div>
+            </Card>
+          )}
+        </div>
+      </div>
     </PageShell>
   );
 }
