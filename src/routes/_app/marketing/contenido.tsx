@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useRef } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { PageHeader, PageShell } from "@/components/page-shell";
 import { Sparkles, Copy, Loader2, Instagram, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { generarContenidoInstagram } from "@/lib/contenido-ia.functions";
 
 export const Route = createFileRoute("/_app/marketing/contenido")({ component: ContenidoPage });
 
