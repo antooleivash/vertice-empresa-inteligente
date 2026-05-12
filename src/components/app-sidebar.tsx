@@ -16,12 +16,15 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type Item = { to: string; label: string; icon: React.ComponentType<{ className?: string }>; module: string };
-type Section = { title: string; items: Item[] };
+type Section = { title: string; items: Item[]; color: string; bg: string; dot: string };
 
 const sections: Section[] = [
-  { title: "General", items: [{ to: "/dashboard", label: "Dashboard gerencial", icon: LayoutDashboard, module: "dashboard" }] },
   {
-    title: "RRHH",
+    title: "General", color: "#6366F1", bg: "#EEF2FF", dot: "#6366F1",
+    items: [{ to: "/dashboard", label: "Dashboard gerencial", icon: LayoutDashboard, module: "dashboard" }]
+  },
+  {
+    title: "RRHH", color: "#0EA5E9", bg: "#E0F2FE", dot: "#0EA5E9",
     items: [
       { to: "/rrhh/empleados", label: "Empleados", icon: Users, module: "rrhh" },
       { to: "/rrhh/asistencia", label: "Asistencia", icon: Clock, module: "asistencia" },
@@ -32,7 +35,7 @@ const sections: Section[] = [
     ],
   },
   {
-    title: "Finanzas",
+    title: "Finanzas", color: "#10B981", bg: "#ECFDF5", dot: "#10B981",
     items: [
       { to: "/finanzas/dashboard", label: "Dashboard financiero", icon: BarChart3, module: "finanzas" },
       { to: "/caja", label: "Caja y ventas", icon: ShoppingCart, module: "caja" },
@@ -47,14 +50,14 @@ const sections: Section[] = [
     ],
   },
   {
-    title: "Gestión",
+    title: "Gestión", color: "#F59E0B", bg: "#FFFBEB", dot: "#F59E0B",
     items: [
       { to: "/agenda", label: "Agenda y calendario", icon: Calendar, module: "agenda" },
       { to: "/clientes", label: "Clientes y CRM", icon: Contact, module: "clientes" },
     ],
   },
   {
-    title: "Cumplimiento Legal DT",
+    title: "Cumplimiento Legal DT", color: "#EF4444", bg: "#FEF2F2", dot: "#EF4444",
     items: [
       { to: "/cumplimiento/contratos", label: "Contratos", icon: FileSignature, module: "cumplimiento" },
       { to: "/cumplimiento/documentos", label: "Documentos obligatorios", icon: FileCheck2, module: "cumplimiento" },
@@ -63,7 +66,7 @@ const sections: Section[] = [
     ],
   },
   {
-    title: "Operaciones",
+    title: "Operaciones", color: "#8B5CF6", bg: "#F5F3FF", dot: "#8B5CF6",
     items: [
       { to: "/operaciones/productividad", label: "Productividad", icon: Activity, module: "operaciones" },
       { to: "/operaciones/turnos", label: "Rendimiento por turno", icon: Gauge, module: "operaciones" },
@@ -71,35 +74,41 @@ const sections: Section[] = [
     ],
   },
   {
-    title: "Inteligencia IA",
+    title: "Inteligencia IA", color: "#EC4899", bg: "#FDF2F8", dot: "#EC4899",
     items: [
       { to: "/ia/alertas", label: "Alertas automáticas", icon: Bell, module: "ia" },
       { to: "/ia/predicciones", label: "Predicciones", icon: Sparkles, module: "ia" },
     ],
   },
   {
-    title: "Reclutamiento",
+    title: "Reclutamiento", color: "#06B6D4", bg: "#ECFEFF", dot: "#06B6D4",
     items: [
       { to: "/reclutamiento/ofertas", label: "Ofertas", icon: Briefcase, module: "reclutamiento" },
       { to: "/reclutamiento/candidatos", label: "Candidatos", icon: UserSearch, module: "reclutamiento" },
     ],
   },
   {
-    title: "Marketing IA",
+    title: "Marketing IA", color: "#F97316", bg: "#FFF7ED", dot: "#F97316",
     items: [
       { to: "/marketing/campanas", label: "Campañas", icon: Megaphone, module: "marketing" },
       { to: "/marketing/contenido", label: "Contenido", icon: Sparkles, module: "marketing" },
     ],
   },
   {
-    title: "Marketplace",
+    title: "Marketplace", color: "#0EA5E9", bg: "#F0F9FF", dot: "#0EA5E9",
     items: [
       { to: "/marketplace/servicios", label: "Servicios", icon: Store, module: "marketplace" },
       { to: "/marketplace/proveedores", label: "Proveedores", icon: Truck, module: "marketplace" },
     ],
   },
   {
-    title: "Configuración",
+    title: "Administración", color: "#64748B", bg: "#F8FAFC", dot: "#64748B",
+    items: [
+      { to: "/admin", label: "Usuarios y roles", icon: Users, module: "dashboard" },
+    ],
+  },
+  {
+    title: "Configuración", color: "#64748B", bg: "#F8FAFC", dot: "#64748B",
     items: [
       { to: "/configuracion/empresa", label: "Empresa", icon: Settings, module: "configuracion" },
       { to: "/configuracion/importar", label: "Importar datos", icon: Upload, module: "configuracion" },
@@ -117,63 +126,84 @@ export function AppSidebar() {
   const [upgradeFor, setUpgradeFor] = useState<{ module: string; tier: PlanTier } | null>(null);
 
   return (
-    <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
-      <div className="flex items-center gap-2 px-5 py-5 border-b border-sidebar-border">
+    <aside style={{ background: "#FFFFFF", borderRight: "1px solid #F1F5F9" }} className="flex h-screen w-64 shrink-0 flex-col text-gray-800">
+      {/* Header */}
+      <div style={{ borderBottom: "1px solid #F1F5F9", padding: "16px 20px" }} className="flex items-center gap-3">
         {empresa.logo_url
-          ? <img src={empresa.logo_url} alt="Logo" className="h-9 w-9 rounded-md object-contain bg-white p-0.5" />
-          : <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Building2 className="h-5 w-5" />
+          ? <img src={empresa.logo_url} alt="Logo" className="h-9 w-9 rounded-xl object-contain" style={{ border: "1.5px solid #E2E8F0" }} />
+          : <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: "linear-gradient(135deg, #6366F1, #8B5CF6)" }}>
+              <Building2 className="h-5 w-5 text-white" />
             </div>}
         <div className="flex flex-col leading-tight">
-          <span className="text-base font-semibold tracking-tight truncate">{empresa.nombre || "Vértice"}</span>
-          <span className="text-[11px] text-muted-foreground">Plan {PLAN_INFO[plan].label}</span>
+          <span className="text-sm font-semibold text-gray-900 truncate">{empresa.nombre || "Vértice"}</span>
+          <span style={{ fontSize: 11, color: "#6366F1", fontWeight: 600 }}>Plan {PLAN_INFO[plan].label}</span>
         </div>
       </div>
 
       <TooltipProvider delayDuration={200}>
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
+        <nav className="flex-1 overflow-y-auto py-3" style={{ paddingLeft: 10, paddingRight: 10 }}>
           {sections.map((s) => {
             const items = s.items.filter((it) => !isHidden(it.module) || isLocked(it.module));
             if (items.length === 0) return null;
             return (
-              <div key={s.title}>
-                <div className="px-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  {s.title}
+              <div key={s.title} style={{ marginBottom: 6 }}>
+                {/* Section header */}
+                <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 8px 4px" }}>
+                  <div style={{ width: 7, height: 7, borderRadius: "50%", background: s.dot, flexShrink: 0 }} />
+                  <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: s.color, textTransform: "uppercase" }}>
+                    {s.title}
+                  </span>
                 </div>
-                <ul className="space-y-0.5">
+                <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
                   {items.map((it) => {
-                    const active = pathname === it.to;
+                    const active = pathname === it.to || pathname.startsWith(it.to + "/");
                     const Icon = it.icon;
                     const locked = isLocked(it.module);
                     const tier = MODULE_TIER[it.module] ?? "basico";
-                    const className = cn(
-                      "flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm transition-colors w-full",
-                      active && !locked
-                        ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                        : locked
-                          ? "text-muted-foreground/70 cursor-pointer hover:bg-sidebar-accent/40"
-                          : "text-sidebar-foreground hover:bg-sidebar-accent/60",
-                    );
+
+                    const itemStyle: React.CSSProperties = {
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 9,
+                      borderRadius: 8,
+                      padding: "6px 10px",
+                      fontSize: 13,
+                      cursor: locked ? "pointer" : "default",
+                      fontWeight: active ? 600 : 400,
+                      color: active ? s.color : locked ? "#CBD5E1" : "#475569",
+                      background: active ? s.bg : "transparent",
+                      transition: "all 0.15s",
+                      width: "100%",
+                      border: "none",
+                      textDecoration: "none",
+                    };
+
                     const inner = (
                       <>
-                        <Icon className="h-4 w-4 shrink-0" />
-                        <span className="truncate flex-1">{it.label}</span>
-                        {locked && <Lock className="h-3 w-3 shrink-0" />}
+                        <Icon style={{ width: 15, height: 15, flexShrink: 0, color: active ? s.color : locked ? "#CBD5E1" : "#94A3B8" }} />
+                        <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{it.label}</span>
+                        {locked && <Lock style={{ width: 11, height: 11, color: "#CBD5E1", flexShrink: 0 }} />}
                       </>
                     );
+
                     return (
                       <li key={it.to}>
                         {locked ? (
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <button className={className} onClick={() => setUpgradeFor({ module: it.module, tier })}>
+                              <button style={itemStyle} onClick={() => setUpgradeFor({ module: it.module, tier })}>
                                 {inner}
                               </button>
                             </TooltipTrigger>
-                            <TooltipContent side="right">Actualizar plan a {PLAN_INFO[tier].label}</TooltipContent>
+                            <TooltipContent side="right">Actualizar a {PLAN_INFO[tier].label}</TooltipContent>
                           </Tooltip>
                         ) : (
-                          <Link to={it.to} className={className}>{inner}</Link>
+                          <Link to={it.to} style={itemStyle}
+                            onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.background = s.bg; }}
+                            onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                          >
+                            {inner}
+                          </Link>
                         )}
                       </li>
                     );
@@ -185,16 +215,24 @@ export function AppSidebar() {
         </nav>
       </TooltipProvider>
 
-      <div className="border-t border-sidebar-border p-3">
-        <div className="mb-2 px-2 text-xs">
-          <div className="font-medium truncate">{user?.email ?? "Invitado"}</div>
-          <div className="text-muted-foreground">Sesión activa</div>
+      {/* Footer */}
+      <div style={{ borderTop: "1px solid #F1F5F9", padding: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 8px", marginBottom: 4 }}>
+          <div style={{ width: 30, height: 30, borderRadius: "50%", background: "linear-gradient(135deg, #6366F1, #8B5CF6)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
+            {(user?.email ?? "?").charAt(0).toUpperCase()}
+          </div>
+          <div style={{ overflow: "hidden" }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "#1E293B", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.email ?? "Invitado"}</div>
+            <div style={{ fontSize: 10, color: "#10B981", fontWeight: 600 }}>● Sesión activa</div>
+          </div>
         </div>
         <button
           onClick={async () => { await signOut(); navigate({ to: "/login" }); }}
-          className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent/60"
+          style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "7px 10px", borderRadius: 8, fontSize: 13, color: "#EF4444", background: "transparent", border: "none", cursor: "pointer", fontWeight: 500 }}
+          onMouseEnter={e => (e.currentTarget.style.background = "#FEF2F2")}
+          onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
         >
-          <LogOut className="h-4 w-4" />
+          <LogOut style={{ width: 15, height: 15 }} />
           Cerrar sesión
         </button>
       </div>
@@ -220,3 +258,4 @@ export function AppSidebar() {
     </aside>
   );
 }
+

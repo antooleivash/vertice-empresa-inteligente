@@ -1,4 +1,6 @@
 import { useLocalValue } from "./local-store";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export type PlanTier = "basico" | "empresa" | "corporativo";
 
@@ -14,19 +16,15 @@ export const PLAN_INFO: Record<PlanTier, { label: string; precio: number; descri
   corporativo: { label: "Corporativo", precio: 199990, descripcion: "Todo Empresa + Reclutamiento, Marketing IA, IA conversacional y soporte prioritario." },
 };
 
-/** Each module belongs to one tier — the minimum plan that unlocks it. */
 export const MODULE_TIER: Record<string, PlanTier> = {
-  // Always available
   dashboard: "basico",
   configuracion: "basico",
-  // Básico
   rrhh: "basico",
   asistencia: "basico",
   cartas: "basico",
   liquidaciones: "basico",
   vacaciones: "basico",
   "horas-extras": "basico",
-  // Empresa
   finanzas: "empresa",
   caja: "empresa",
   inventario: "empresa",
@@ -36,11 +34,11 @@ export const MODULE_TIER: Record<string, PlanTier> = {
   operaciones: "empresa",
   agenda: "basico",
   clientes: "basico",
-  // Corporativo
   reclutamiento: "corporativo",
   marketing: "corporativo",
   ia: "corporativo",
   marketplace: "corporativo",
+  impuestos: "empresa",
 };
 
 export function isUnlockedByPlan(moduleKey: string, plan: PlanTier) {
@@ -51,9 +49,21 @@ export function isUnlockedByPlan(moduleKey: string, plan: PlanTier) {
 export function usePlan() {
   const [plan, setPlan] = useLocalValue<PlanTier>("vertice.empresa.plan", "empresa");
   const [hidden, setHidden] = useLocalValue<string[]>("vertice.empresa.modulos_ocultos", []);
-  const isHidden = (key: string) => hidden.includes(key);
+  const [isSuperadmin, setIsSuperadmin] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      supabase.from("user_roles").select("role").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+        if (data?.role === "superadmin") setIsSuperadmin(true);
+      });
+    });
+  }, []);
+
+  const isHidden = (key: string) => isSuperadmin ? false : hidden.includes(key);
   const toggleHidden = (key: string) =>
     setHidden((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
-  const isLocked = (key: string) => !isUnlockedByPlan(key, plan);
+  const isLocked = (key: string) => isSuperadmin ? false : !isUnlockedByPlan(key, plan);
+
   return { plan, setPlan, hidden, isHidden, toggleHidden, isLocked };
 }

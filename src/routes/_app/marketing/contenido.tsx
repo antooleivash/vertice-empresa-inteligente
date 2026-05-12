@@ -1,220 +1,295 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useRef } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { PageHeader, PageShell } from "@/components/page-shell";
-import { Sparkles, Copy, Loader2, Instagram, RefreshCw } from "lucide-react";
+import { Sparkles, Copy, Download, Loader2, Instagram, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
-import { generarContenidoInstagram } from "@/lib/contenido-ia.functions";
+import html2canvas from "html2canvas";
 
 export const Route = createFileRoute("/_app/marketing/contenido")({ component: ContenidoPage });
 
 const TIPOS = [
-  "📸 Promoción Instagram",
-  "💡 Tips / Consejos",
-  "🏢 Contenido de empresa",
-  "🚀 Oferta laboral",
-] as const;
-
-const TONOS = ["Profesional", "Cercano y directo", "Motivador", "Formal"] as const;
-
-const ESTILOS = [
-  { id: "rosa",    label: "Rosa",    gradient: "linear-gradient(135deg,#f472b6,#a855f7)" },
-  { id: "naranja", label: "Naranja", gradient: "linear-gradient(135deg,#fb923c,#ef4444)" },
-  { id: "azul",    label: "Azul",    gradient: "linear-gradient(135deg,#38bdf8,#1e3a8a)" },
-  { id: "verde",   label: "Verde",   gradient: "linear-gradient(135deg,#34d399,#0f766e)" },
-  { id: "violeta", label: "Violeta", gradient: "linear-gradient(135deg,#8b5cf6,#3b0764)" },
-  { id: "oscuro",  label: "Oscuro",  gradient: "linear-gradient(135deg,#1f2937,#000000)" },
+  { value: "instagram_promo", label: "📸 Promoción Instagram" },
+  { value: "instagram_tips", label: "💡 Tips / Consejos" },
+  { value: "instagram_empresa", label: "🏢 Contenido de empresa" },
+  { value: "instagram_oferta", label: "🚀 Oferta laboral" },
 ];
 
-type Resultado = {
+const TONOS = [
+  { value: "profesional", label: "Profesional" },
+  { value: "cercano", label: "Cercano y directo" },
+  { value: "motivador", label: "Motivador" },
+  { value: "formal", label: "Formal" },
+];
+
+const ESTILOS = [
+  { value: "moderno", gradient: "linear-gradient(135deg, #667eea, #764ba2)", label: "Moderno" },
+  { value: "vibrante", gradient: "linear-gradient(135deg, #f093fb, #f5576c)", label: "Vibrante" },
+  { value: "natural", gradient: "linear-gradient(135deg, #4facfe, #00f2fe)", label: "Natural" },
+  { value: "oscuro", gradient: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)", label: "Oscuro" },
+  { value: "sunset", gradient: "linear-gradient(135deg, #f7971e, #ffd200)", label: "Sunset" },
+  { value: "verde", gradient: "linear-gradient(135deg, #11998e, #38ef7d)", label: "Verde" },
+];
+
+interface Resultado {
   titulo: string;
   cuerpo: string;
   hashtags: string;
   emoji_principal: string;
   cta: string;
-};
+}
 
 function ContenidoPage() {
-  const [tipo, setTipo] = useState<string>(TIPOS[0]);
-  const [tono, setTono] = useState<string>(TONOS[1]);
-  const [empresa, setEmpresa] = useState("");
+  const [tipo, setTipo] = useState("instagram_promo");
+  const [tono, setTono] = useState("cercano");
   const [tema, setTema] = useState("");
-  const [estilo, setEstilo] = useState(ESTILOS[0]);
+  const [empresa, setEmpresa] = useState("");
+  const [estiloIdx, setEstiloIdx] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [res, setRes] = useState<Resultado | null>(null);
-  const lastReqRef = useRef<{ tipo: string; tono: string; empresa: string; tema: string } | null>(null);
+  const [resultado, setResultado] = useState<Resultado | null>(null);
+  const [textoCompleto, setTextoCompleto] = useState("");
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  const generarFn = useServerFn(generarContenidoInstagram);
+  const estilo = ESTILOS[estiloIdx];
 
-  const generar = async (regen = false) => {
-    const payload = regen && lastReqRef.current ? lastReqRef.current : { tipo, tono, empresa, tema };
-    if (!payload.tema.trim()) {
-      toast.error("Describe el tema de la publicación");
-      return;
-    }
-    lastReqRef.current = payload;
+  const generar = async () => {
+    if (!tema) return toast.error("Ingresa el tema o descripción");
     setLoading(true);
+    setResultado(null);
+    setTextoCompleto("");
+
     try {
-      const data = await generarFn({ data: payload });
-      setRes(data);
+      const tipoLabel = TIPOS.find(t => t.value === tipo)?.label || tipo;
+      const tonoLabel = TONOS.find(t => t.value === tono)?.label || tono;
+
+      const prompt = `Eres un experto en marketing digital para empresas chilenas. 
+Genera contenido para una publicación de Instagram.
+
+Tipo: ${tipoLabel}
+Tono: ${tonoLabel}
+Tema/Descripción: ${tema}
+${empresa ? `Empresa: ${empresa}` : ""}
+
+Responde SOLO con un JSON válido con esta estructura exacta (sin markdown, sin explicaciones):
+{
+  "titulo": "título llamativo máximo 8 palabras",
+  "cuerpo": "texto principal de la publicación, máximo 150 palabras, con saltos de línea naturales usando \\n",
+  "hashtags": "5-8 hashtags relevantes separados por espacio",
+  "emoji_principal": "un solo emoji que represente el post",
+  "cta": "llamado a la acción corto máximo 10 palabras"
+}`;
+
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": import.meta.env.VITE_ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true",
+        },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 1000,
+          messages: [{ role: "user", content: prompt }],
+        }),
+      });
+
+      const data = await response.json();
+      const text = data.content?.map((i: any) => i.text || "").join("") || "";
+
+      try {
+        const clean = text.replace(/```json|```/g, "").trim();
+        const parsed: Resultado = JSON.parse(clean);
+        setResultado(parsed);
+        const textoPost = `${parsed.emoji_principal} ${parsed.titulo}\n\n${parsed.cuerpo}\n\n${parsed.cta}\n\n${parsed.hashtags}`;
+        setTextoCompleto(textoPost);
+      } catch {
+        setTextoCompleto(text);
+        toast.error("No se pudo parsear la respuesta");
+      }
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Error generando contenido");
+      toast.error("Error al conectar con la IA");
     } finally {
       setLoading(false);
     }
   };
 
-  const textoCompleto = res
-    ? `${res.emoji_principal} ${res.titulo}\n\n${res.cuerpo}\n\n${res.cta}\n\n${res.hashtags}`
-    : "";
-
-  const copiar = () => {
-    if (!textoCompleto) return;
+  const copiarTexto = () => {
     navigator.clipboard.writeText(textoCompleto);
-    toast.success("Texto copiado");
+    toast.success("Texto copiado — listo para pegar en Instagram");
+  };
+
+  const descargarImagen = async () => {
+    if (!cardRef.current) return;
+    toast.info("Generando imagen...");
+    try {
+      const canvas = await html2canvas(cardRef.current, { useCORS: true, scale: 2 });
+      const link = document.createElement("a");
+      link.download = "instagram-post.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      toast.success("Imagen descargada");
+    } catch {
+      toast.error("No se pudo descargar la imagen");
+    }
   };
 
   return (
     <PageShell>
       <PageHeader
         title="Contenido IA para Instagram"
-        description="Genera publicaciones reales con Claude en segundos."
+        description="Genera publicaciones listas para copiar y publicar, con diseño visual incluido."
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Panel de configuración */}
-        <div className="rounded-lg border bg-card p-5 space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-sm font-medium mb-1 block">Tipo de contenido</label>
-              <select
-                value={tipo}
-                onChange={(e) => setTipo(e.target.value)}
-                className="w-full h-9 rounded-md border border-input bg-transparent px-3 text-sm"
-              >
-                {TIPOS.map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="text-sm font-medium mb-1 block">Tono</label>
-              <select
-                value={tono}
-                onChange={(e) => setTono(e.target.value)}
-                className="w-full h-9 rounded-md border border-input bg-transparent px-3 text-sm"
-              >
-                {TONOS.map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-          </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, alignItems: "start" }}>
 
-          <div>
-            <label className="text-sm font-medium mb-1 block">Tema o descripción de la publicación</label>
-            <textarea
-              rows={5}
-              value={tema}
-              onChange={(e) => setTema(e.target.value)}
-              placeholder="Ej: Lanzamos nuevo servicio de mantenimiento industrial 24/7 en Puerto Montt con 20% de descuento el primer mes."
-              className="w-full rounded-md border border-input bg-transparent p-3 text-sm"
-            />
-          </div>
+        <div style={{ background: "#fff", border: "1px solid #F1F5F9", borderRadius: 16, padding: 24 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: "#1E293B", marginBottom: 20 }}>✍️ Describe tu publicación</div>
 
-          <div>
-            <label className="text-sm font-medium mb-1 block">Nombre de empresa (opcional)</label>
-            <input
-              value={empresa}
-              onChange={(e) => setEmpresa(e.target.value)}
-              placeholder="Ej: Vértice"
-              className="w-full h-9 rounded-md border border-input bg-transparent px-3 text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium mb-2 block">Estilo visual de la tarjeta</label>
-            <div className="grid grid-cols-6 gap-2">
-              {ESTILOS.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => setEstilo(s)}
-                  title={s.label}
-                  className={`h-10 rounded-md border-2 transition ${estilo.id === s.id ? "border-foreground scale-105" : "border-transparent"}`}
-                  style={{ background: s.gradient }}
-                />
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 6 }}>TIPO DE CONTENIDO</label>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              {TIPOS.map(t => (
+                <button key={t.value} onClick={() => setTipo(t.value)} style={{
+                  padding: "8px 10px", borderRadius: 8, fontSize: 12, cursor: "pointer", textAlign: "left",
+                  border: tipo === t.value ? "2px solid #6366F1" : "1.5px solid #E2E8F0",
+                  background: tipo === t.value ? "#EEF2FF" : "#fff",
+                  color: tipo === t.value ? "#4338CA" : "#475569",
+                  fontWeight: tipo === t.value ? 600 : 400,
+                }}>{t.label}</button>
               ))}
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <button
-              onClick={() => generar(false)}
-              disabled={loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 h-10 rounded-md bg-primary text-primary-foreground text-sm font-medium disabled:opacity-50"
-            >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-              Generar con IA
-            </button>
-            {res && (
-              <button
-                onClick={() => generar(true)}
-                disabled={loading}
-                className="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-md border border-input text-sm font-medium disabled:opacity-50"
-                title="Regenerar con los mismos datos"
-              >
-                <RefreshCw className="h-4 w-4" />
-              </button>
-            )}
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 6 }}>TONO</label>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {TONOS.map(t => (
+                <button key={t.value} onClick={() => setTono(t.value)} style={{
+                  padding: "6px 12px", borderRadius: 20, fontSize: 12, cursor: "pointer",
+                  border: tono === t.value ? "2px solid #6366F1" : "1.5px solid #E2E8F0",
+                  background: tono === t.value ? "#EEF2FF" : "#fff",
+                  color: tono === t.value ? "#4338CA" : "#475569",
+                  fontWeight: tono === t.value ? 600 : 400,
+                }}>{t.label}</button>
+              ))}
+            </div>
           </div>
+
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 6 }}>TEMA O DESCRIPCIÓN *</label>
+            <textarea value={tema} onChange={e => setTema(e.target.value)}
+              placeholder="Ej: Ofrecemos servicio de faenamiento de calidad para el sector salmonero en Puerto Montt"
+              rows={4} style={{ width: "100%", padding: "10px 12px", borderRadius: 8, fontSize: 13, border: "1.5px solid #E2E8F0", resize: "none", fontFamily: "inherit", color: "#1E293B", outline: "none" }} />
+          </div>
+
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 6 }}>NOMBRE DE EMPRESA (opcional)</label>
+            <input value={empresa} onChange={e => setEmpresa(e.target.value)} placeholder="Ej: Multi X S.A."
+              style={{ width: "100%", padding: "9px 12px", borderRadius: 8, fontSize: 13, border: "1.5px solid #E2E8F0", fontFamily: "inherit", color: "#1E293B", outline: "none" }} />
+          </div>
+
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 8 }}>ESTILO DE TARJETA</label>
+            <div style={{ display: "flex", gap: 8 }}>
+              {ESTILOS.map((e, i) => (
+                <button key={e.value} onClick={() => setEstiloIdx(i)} title={e.label} style={{
+                  width: 36, height: 36, borderRadius: 8, cursor: "pointer",
+                  background: e.gradient,
+                  border: estiloIdx === i ? "3px solid #1E293B" : "3px solid transparent",
+                  outline: "none",
+                }} />
+              ))}
+            </div>
+          </div>
+
+          <button onClick={generar} disabled={loading} style={{
+            width: "100%", padding: "12px", borderRadius: 10, fontSize: 14, fontWeight: 600,
+            background: loading ? "#C7D2FE" : "linear-gradient(135deg, #6366F1, #8B5CF6)",
+            color: "#fff", border: "none", cursor: loading ? "not-allowed" : "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+          }}>
+            {loading
+              ? <><Loader2 style={{ width: 16, height: 16, animation: "spin 1s linear infinite" }} /> Generando...</>
+              : <><Sparkles style={{ width: 16, height: 16 }} /> Generar con IA</>}
+          </button>
         </div>
 
-        {/* Vista previa */}
-        <div className="space-y-3">
-          <div className="rounded-lg border bg-card p-4">
-            <div className="flex items-center gap-2 mb-3 text-sm text-muted-foreground">
-              <Instagram className="h-4 w-4" /> Vista previa
-            </div>
-            <div
-              className="aspect-square w-full rounded-lg p-6 flex flex-col justify-between text-white shadow-lg overflow-hidden"
-              style={{ background: estilo.gradient }}
-            >
-              <div className="text-5xl">{res?.emoji_principal ?? "✨"}</div>
-              <div className="space-y-3">
-                <div className="text-2xl font-bold leading-tight drop-shadow">
-                  {res?.titulo || "Tu título aparecerá aquí"}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "#64748B", marginBottom: 10 }}>VISTA PREVIA — TARJETA INSTAGRAM</div>
+            <div ref={cardRef} style={{
+              width: "100%", aspectRatio: "1 / 1",
+              background: resultado ? estilo.gradient : "#F8FAFC",
+              borderRadius: 16, display: "flex", flexDirection: "column",
+              alignItems: "center", justifyContent: "center",
+              padding: 32, textAlign: "center", position: "relative",
+              overflow: "hidden", border: "1px solid #E2E8F0",
+            }}>
+              {!resultado && !loading && (
+                <div style={{ color: "#CBD5E1", fontSize: 13 }}>
+                  <Instagram style={{ width: 32, height: 32, marginBottom: 8, opacity: 0.3 }} />
+                  <div>La tarjeta aparecerá aquí</div>
                 </div>
-                <div className="text-sm leading-snug opacity-95 line-clamp-4 whitespace-pre-line">
-                  {res?.cuerpo || "El cuerpo de la publicación se mostrará aquí cuando generes el contenido con IA."}
+              )}
+              {loading && (
+                <div style={{ color: "#94A3B8", fontSize: 13, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+                  <Loader2 style={{ width: 32, height: 32, animation: "spin 1s linear infinite" }} />
+                  <div>Generando contenido...</div>
                 </div>
-                {res?.cta && (
-                  <div className="inline-block bg-white/20 backdrop-blur px-3 py-1.5 rounded-full text-xs font-semibold">
-                    {res.cta}
+              )}
+              {resultado && !loading && (
+                <>
+                  <div style={{ position: "absolute", top: -40, right: -40, width: 160, height: 160, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
+                  <div style={{ position: "absolute", bottom: -30, left: -30, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.06)" }} />
+                  <div style={{ position: "relative", zIndex: 1 }}>
+                    <div style={{ fontSize: 52, marginBottom: 12 }}>{resultado.emoji_principal}</div>
+                    <div style={{ fontSize: 20, fontWeight: 800, color: "#fff", marginBottom: 14, lineHeight: 1.2, textShadow: "0 2px 8px rgba(0,0,0,0.2)" }}>{resultado.titulo}</div>
+                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.9)", lineHeight: 1.6, marginBottom: 16, whiteSpace: "pre-line" }}>
+                      {resultado.cuerpo.slice(0, 200)}{resultado.cuerpo.length > 200 ? "..." : ""}
+                    </div>
+                    <div style={{ background: "rgba(255,255,255,0.2)", borderRadius: 20, padding: "6px 16px", fontSize: 11, color: "#fff", fontWeight: 600, display: "inline-block", marginBottom: 12 }}>{resultado.cta}</div>
+                    {empresa && <div style={{ fontSize: 10, color: "rgba(255,255,255,0.6)", marginTop: 8 }}>{empresa}</div>}
                   </div>
-                )}
-              </div>
+                </>
+              )}
             </div>
           </div>
 
-          {res && (
-            <div className="rounded-lg border bg-card p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-medium">Texto completo</div>
-                <button
-                  onClick={copiar}
-                  className="inline-flex items-center gap-1 text-sm px-3 py-1.5 rounded-md hover:bg-accent"
-                >
-                  <Copy className="h-3 w-3" /> Copiar
-                </button>
-              </div>
-              <textarea
-                readOnly
-                rows={10}
-                value={textoCompleto}
-                className="w-full rounded-md border border-input bg-transparent p-3 font-mono text-xs"
-              />
-              <div className="text-xs text-muted-foreground break-words">{res.hashtags}</div>
+          {resultado && (
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={copiarTexto} style={{
+                flex: 1, padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600,
+                background: "#EEF2FF", color: "#4338CA", border: "1.5px solid #C7D2FE", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              }}>
+                <Copy style={{ width: 14, height: 14 }} /> Copiar texto
+              </button>
+              <button onClick={descargarImagen} style={{
+                flex: 1, padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600,
+                background: "#F0FDF4", color: "#16A34A", border: "1.5px solid #BBF7D0", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              }}>
+                <Download style={{ width: 14, height: 14 }} /> Descargar imagen
+              </button>
+              <button onClick={generar} style={{
+                padding: "10px 14px", borderRadius: 8, fontSize: 13,
+                background: "#F8FAFC", color: "#64748B", border: "1.5px solid #E2E8F0", cursor: "pointer",
+              }}>
+                <RefreshCw style={{ width: 14, height: 14 }} />
+              </button>
+            </div>
+          )}
+
+          {textoCompleto && (
+            <div style={{ background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: 12, padding: 16 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "#64748B", marginBottom: 8 }}>TEXTO COMPLETO PARA INSTAGRAM</div>
+              <div style={{ fontSize: 12, color: "#475569", lineHeight: 1.7, whiteSpace: "pre-line" }}>{textoCompleto}</div>
             </div>
           )}
         </div>
       </div>
+
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </PageShell>
   );
 }

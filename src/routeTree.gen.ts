@@ -26,6 +26,7 @@ import { Route as AppClientesRouteImport } from './routes/_app/clientes'
 import { Route as AppCajaRouteImport } from './routes/_app/caja'
 import { Route as AppBalanceRouteImport } from './routes/_app/balance'
 import { Route as AppAgendaRouteImport } from './routes/_app/agenda'
+import { Route as AppAdminRouteImport } from './routes/_app/admin'
 import { Route as PrintTipoIdRouteImport } from './routes/print.$tipo.$id'
 import { Route as AppRrhhVacacionesRouteImport } from './routes/_app/rrhh/vacaciones'
 import { Route as AppRrhhLiquidacionesRouteImport } from './routes/_app/rrhh/liquidaciones'
@@ -139,6 +140,11 @@ const AppBalanceRoute = AppBalanceRouteImport.update({
 const AppAgendaRoute = AppAgendaRouteImport.update({
   id: '/agenda',
   path: '/agenda',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AppRoute,
 } as any)
 const PrintTipoIdRoute = PrintTipoIdRouteImport.update({
@@ -303,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/admin': typeof AppAdminRoute
   '/agenda': typeof AppAgendaRoute
   '/balance': typeof AppBalanceRoute
   '/caja': typeof AppCajaRoute
@@ -351,6 +358,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/admin': typeof AppAdminRoute
   '/agenda': typeof AppAgendaRoute
   '/balance': typeof AppBalanceRoute
   '/caja': typeof AppCajaRoute
@@ -401,6 +409,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/marcar': typeof MarcarRoute
   '/portal': typeof PortalRouteWithChildren
+  '/_app/admin': typeof AppAdminRoute
   '/_app/agenda': typeof AppAgendaRoute
   '/_app/balance': typeof AppBalanceRoute
   '/_app/caja': typeof AppCajaRoute
@@ -451,6 +460,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/admin'
     | '/agenda'
     | '/balance'
     | '/caja'
@@ -499,6 +509,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/admin'
     | '/agenda'
     | '/balance'
     | '/caja'
@@ -548,6 +559,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/marcar'
     | '/portal'
+    | '/_app/admin'
     | '/_app/agenda'
     | '/_app/balance'
     | '/_app/caja'
@@ -720,6 +732,13 @@ declare module '@tanstack/react-router' {
       path: '/agenda'
       fullPath: '/agenda'
       preLoaderRoute: typeof AppAgendaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
     }
     '/print/$tipo/$id': {
@@ -936,6 +955,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
   AppAgendaRoute: typeof AppAgendaRoute
   AppBalanceRoute: typeof AppBalanceRoute
   AppCajaRoute: typeof AppCajaRoute
@@ -976,6 +996,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
   AppAgendaRoute: AppAgendaRoute,
   AppBalanceRoute: AppBalanceRoute,
   AppCajaRoute: AppCajaRoute,
@@ -1045,3 +1066,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
