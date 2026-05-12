@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useRef } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { PageHeader, PageShell } from "@/components/page-shell";
 import { Sparkles, Copy, Loader2, Instagram, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { generarContenidoInstagram } from "@/lib/contenido-ia.functions";
 
 export const Route = createFileRoute("/_app/marketing/contenido")({ component: ContenidoPage });
 
@@ -42,73 +44,19 @@ function ContenidoPage() {
   const [res, setRes] = useState<Resultado | null>(null);
   const lastReqRef = useRef<{ tipo: string; tono: string; empresa: string; tema: string } | null>(null);
 
+  const generarFn = useServerFn(generarContenidoInstagram);
+
   const generar = async (regen = false) => {
     const payload = regen && lastReqRef.current ? lastReqRef.current : { tipo, tono, empresa, tema };
     if (!payload.tema.trim()) {
       toast.error("Describe el tema de la publicación");
       return;
     }
-    const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY as string | undefined;
-    if (!apiKey) {
-      toast.error("Falta VITE_ANTHROPIC_API_KEY en las variables de entorno.");
-      return;
-    }
     lastReqRef.current = payload;
     setLoading(true);
     try {
-      const system = `Eres un experto creador de contenido para Instagram, especializado en empresas chilenas. Escribes en español de Chile, con tono ${payload.tono}.
-Responde SIEMPRE y SOLO con un objeto JSON válido (sin markdown, sin texto extra, sin backticks) con estos campos exactos:
-{
-  "titulo": "título corto y potente (máx 60 caracteres)",
-  "cuerpo": "cuerpo de la publicación, 2-4 párrafos cortos con saltos de línea",
-  "hashtags": "string con 6-10 hashtags separados por espacio, todos comenzando con #",
-  "emoji_principal": "un solo emoji representativo",
-  "cta": "llamada a la acción corta (máx 50 caracteres)"
-}`;
-
-      const user = `Tipo de contenido: ${payload.tipo}
-${payload.empresa ? `Empresa: ${payload.empresa}` : ""}
-Tema/descripción: ${payload.tema}
-
-Genera la publicación en formato JSON.`;
-
-      const r = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true",
-        },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          system,
-          messages: [{ role: "user", content: user }],
-        }),
-      });
-
-      if (!r.ok) {
-        const txt = await r.text();
-        console.error("Anthropic error", r.status, txt);
-        throw new Error(`Error ${r.status}: ${txt.slice(0, 200)}`);
-      }
-      const json = (await r.json()) as { content?: Array<{ type: string; text?: string }> };
-      const raw = json.content?.find((c) => c.type === "text")?.text?.trim() ?? "{}";
-      let parsed: Partial<Resultado>;
-      try {
-        parsed = JSON.parse(raw);
-      } catch {
-        const m = raw.match(/\{[\s\S]*\}/);
-        parsed = m ? JSON.parse(m[0]) : {};
-      }
-      setRes({
-        titulo: parsed.titulo ?? "",
-        cuerpo: parsed.cuerpo ?? "",
-        hashtags: parsed.hashtags ?? "",
-        emoji_principal: parsed.emoji_principal ?? "✨",
-        cta: parsed.cta ?? "",
-      });
+      const data = await generarFn({ data: payload });
+      setRes(data);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Error generando contenido");
     } finally {

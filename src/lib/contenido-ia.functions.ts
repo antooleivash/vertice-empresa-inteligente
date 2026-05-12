@@ -11,12 +11,12 @@ const InputSchema = z.object({
 export const generarContenidoInstagram = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY no está configurada.");
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) throw new Error("ANTHROPIC_API_KEY no está configurada.");
 
     const system = `Eres un experto creador de contenido para Instagram, especializado en empresas chilenas.
-Generas publicaciones atractivas, con español de Chile, tono ${data.tono}.
-Responde SIEMPRE y SOLO con un objeto JSON válido (sin markdown, sin texto extra) con estos campos exactos:
+Escribes en español de Chile, con tono ${data.tono}.
+Responde SIEMPRE y SOLO con un objeto JSON válido (sin markdown, sin texto extra, sin backticks) con estos campos exactos:
 {
   "titulo": "título corto y potente (máx 60 caracteres)",
   "cuerpo": "cuerpo de la publicación, 2-4 párrafos cortos con saltos de línea",
@@ -31,28 +31,29 @@ Tema/descripción: ${data.tema}
 
 Genera la publicación en formato JSON.`;
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          { role: "system", content: system },
-          { role: "user", content: user },
-        ],
-        response_format: { type: "json_object" },
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system,
+        messages: [{ role: "user", content: user }],
       }),
     });
 
     if (res.status === 429) throw new Error("Demasiadas consultas. Intenta en unos segundos.");
-    if (res.status === 402) throw new Error("Sin créditos. Recarga en Settings → Workspace → Usage.");
     if (!res.ok) {
       const txt = await res.text();
-      console.error("AI error", res.status, txt);
-      throw new Error("No se pudo generar el contenido.");
+      console.error("Anthropic error", res.status, txt);
+      throw new Error(`Error ${res.status} al generar contenido.`);
     }
-    const json = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
-    const raw = json.choices?.[0]?.message?.content?.trim() ?? "{}";
+    const json = (await res.json()) as { content?: Array<{ type: string; text?: string }> };
+    const raw = json.content?.find((c) => c.type === "text")?.text?.trim() ?? "{}";
     let parsed: { titulo?: string; cuerpo?: string; hashtags?: string; emoji_principal?: string; cta?: string };
     try {
       parsed = JSON.parse(raw);
