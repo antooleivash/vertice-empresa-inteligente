@@ -19,6 +19,7 @@ import { Route as PortalLiquidacionesRouteImport } from './routes/portal.liquida
 import { Route as PortalDocumentosRouteImport } from './routes/portal.documentos'
 import { Route as PortalAsistenciaRouteImport } from './routes/portal.asistencia'
 import { Route as AppSimuladorRouteImport } from './routes/_app/simulador'
+import { Route as AppPuntosFidelizacionRouteImport } from './routes/_app/puntos-fidelizacion'
 import { Route as AppInventarioRouteImport } from './routes/_app/inventario'
 import { Route as AppImpuestosRouteImport } from './routes/_app/impuestos'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
@@ -105,6 +106,11 @@ const PortalAsistenciaRoute = PortalAsistenciaRouteImport.update({
 const AppSimuladorRoute = AppSimuladorRouteImport.update({
   id: '/simulador',
   path: '/simulador',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPuntosFidelizacionRoute = AppPuntosFidelizacionRouteImport.update({
+  id: '/puntos-fidelizacion',
+  path: '/puntos-fidelizacion',
   getParentRoute: () => AppRoute,
 } as any)
 const AppInventarioRoute = AppInventarioRouteImport.update({
@@ -317,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AppDashboardRoute
   '/impuestos': typeof AppImpuestosRoute
   '/inventario': typeof AppInventarioRoute
+  '/puntos-fidelizacion': typeof AppPuntosFidelizacionRoute
   '/simulador': typeof AppSimuladorRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
@@ -366,6 +373,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AppDashboardRoute
   '/impuestos': typeof AppImpuestosRoute
   '/inventario': typeof AppInventarioRoute
+  '/puntos-fidelizacion': typeof AppPuntosFidelizacionRoute
   '/simulador': typeof AppSimuladorRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
@@ -417,6 +425,7 @@ export interface FileRoutesById {
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/impuestos': typeof AppImpuestosRoute
   '/_app/inventario': typeof AppInventarioRoute
+  '/_app/puntos-fidelizacion': typeof AppPuntosFidelizacionRoute
   '/_app/simulador': typeof AppSimuladorRoute
   '/portal/asistencia': typeof PortalAsistenciaRoute
   '/portal/documentos': typeof PortalDocumentosRoute
@@ -468,6 +477,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/impuestos'
     | '/inventario'
+    | '/puntos-fidelizacion'
     | '/simulador'
     | '/portal/asistencia'
     | '/portal/documentos'
@@ -517,6 +527,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/impuestos'
     | '/inventario'
+    | '/puntos-fidelizacion'
     | '/simulador'
     | '/portal/asistencia'
     | '/portal/documentos'
@@ -567,6 +578,7 @@ export interface FileRouteTypes {
     | '/_app/dashboard'
     | '/_app/impuestos'
     | '/_app/inventario'
+    | '/_app/puntos-fidelizacion'
     | '/_app/simulador'
     | '/portal/asistencia'
     | '/portal/documentos'
@@ -683,6 +695,13 @@ declare module '@tanstack/react-router' {
       path: '/simulador'
       fullPath: '/simulador'
       preLoaderRoute: typeof AppSimuladorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/puntos-fidelizacion': {
+      id: '/_app/puntos-fidelizacion'
+      path: '/puntos-fidelizacion'
+      fullPath: '/puntos-fidelizacion'
+      preLoaderRoute: typeof AppPuntosFidelizacionRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/inventario': {
@@ -963,6 +982,7 @@ interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppImpuestosRoute: typeof AppImpuestosRoute
   AppInventarioRoute: typeof AppInventarioRoute
+  AppPuntosFidelizacionRoute: typeof AppPuntosFidelizacionRoute
   AppSimuladorRoute: typeof AppSimuladorRoute
   AppConfiguracionEmpresaRoute: typeof AppConfiguracionEmpresaRoute
   AppConfiguracionImportarRoute: typeof AppConfiguracionImportarRoute
@@ -1004,6 +1024,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppImpuestosRoute: AppImpuestosRoute,
   AppInventarioRoute: AppInventarioRoute,
+  AppPuntosFidelizacionRoute: AppPuntosFidelizacionRoute,
   AppSimuladorRoute: AppSimuladorRoute,
   AppConfiguracionEmpresaRoute: AppConfiguracionEmpresaRoute,
   AppConfiguracionImportarRoute: AppConfiguracionImportarRoute,
@@ -1066,13 +1087,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
