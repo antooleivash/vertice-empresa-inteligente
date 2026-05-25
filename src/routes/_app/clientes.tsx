@@ -14,8 +14,9 @@ import { StatusPill } from "@/components/status-pill";
 import { useClientes, useEventos, type Cliente, type ClienteTag, type ClienteTipo } from "@/lib/crm-store";
 import { uid, useLocalList } from "@/lib/local-store";
 import { formatCLP } from "@/lib/domain";
-import { Plus, Search, ArrowLeft, TrendingUp } from "lucide-react";
+import { Plus, Search, ArrowLeft, TrendingUp, Star } from "lucide-react";
 import { toast } from "sonner";
+import { PuntosFidelizacionPanel } from "@/components/puntos-fidelizacion-panel";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 export const Route = createFileRoute("/_app/clientes")({ component: ClientesPage });
@@ -47,6 +48,7 @@ function ClientesPage() {
           <TabsTrigger value="listado">Clientes</TabsTrigger>
           <TabsTrigger value="perfil" disabled={!selectedId}>Perfil del cliente</TabsTrigger>
           <TabsTrigger value="analisis">Análisis</TabsTrigger>
+          <TabsTrigger value="puntos"><Star className="h-3.5 w-3.5 mr-1" />Puntos fidelización</TabsTrigger>
         </TabsList>
 
         <TabsContent value="listado">
@@ -69,6 +71,10 @@ function ClientesPage() {
 
         <TabsContent value="analisis">
           <AnalisisTab clientes={clientes} ventas={ventas} />
+        </TabsContent>
+
+        <TabsContent value="puntos" className="mt-4">
+          <PuntosFidelizacionPanel showHeaderActions />
         </TabsContent>
       </Tabs>
     </PageShell>
