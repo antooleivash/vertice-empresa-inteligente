@@ -48,6 +48,7 @@ function ClientesPage() {
           <TabsTrigger value="listado">Clientes</TabsTrigger>
           <TabsTrigger value="perfil" disabled={!selectedId}>Perfil del cliente</TabsTrigger>
           <TabsTrigger value="analisis">Análisis</TabsTrigger>
+          <TabsTrigger value="puntos"><Star className="h-3.5 w-3.5 mr-1" />Puntos fidelización</TabsTrigger>
         </TabsList>
 
         <TabsContent value="listado">
@@ -70,6 +71,10 @@ function ClientesPage() {
 
         <TabsContent value="analisis">
           <AnalisisTab clientes={clientes} ventas={ventas} />
+        </TabsContent>
+
+        <TabsContent value="puntos" className="mt-4">
+          <PuntosFidelizacionPanel showHeaderActions />
         </TabsContent>
       </Tabs>
     </PageShell>
