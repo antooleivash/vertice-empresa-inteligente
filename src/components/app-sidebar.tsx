@@ -50,6 +50,12 @@ const sections: Section[] = [
     ],
   },
   {
+    title: "Clientes", color: "#F59E0B", bg: "#FFFBEB", dot: "#F59E0B",
+    items: [
+      { to: "/puntos-fidelizacion", label: "Puntos fidelización", icon: Star, module: "fidelizacion" },
+    ],
+  },
+  {
     title: "Gestión", color: "#F59E0B", bg: "#FFFBEB", dot: "#F59E0B",
     items: [
       { to: "/agenda", label: "Agenda y calendario", icon: Calendar, module: "agenda" },
