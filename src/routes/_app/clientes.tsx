@@ -14,8 +14,9 @@ import { StatusPill } from "@/components/status-pill";
 import { useClientes, useEventos, type Cliente, type ClienteTag, type ClienteTipo } from "@/lib/crm-store";
 import { uid, useLocalList } from "@/lib/local-store";
 import { formatCLP } from "@/lib/domain";
-import { Plus, Search, ArrowLeft, TrendingUp } from "lucide-react";
+import { Plus, Search, ArrowLeft, TrendingUp, Star } from "lucide-react";
 import { toast } from "sonner";
+import { PuntosFidelizacionPanel } from "@/components/puntos-fidelizacion-panel";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 export const Route = createFileRoute("/_app/clientes")({ component: ClientesPage });
