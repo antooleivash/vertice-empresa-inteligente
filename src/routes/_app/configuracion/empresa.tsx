@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_app/configuracion/empresa")({ component:
 
 function EmpresaPage() {
   const [form, setForm] = useState<EmpresaConfig>({
-    nombre: "", rut: "", direccion: "", telefono: "", web: "", ciudad: "", logo_url: null,
+    nombre: "", rut: "", direccion: "", telefono: "", web: "", ciudad: "", logo_url: null, tipo_empresa: "servicios",
   });
   const [uploading, setUploading] = useState(false);
 

@@ -30,7 +30,7 @@ type LiqFull = {
 const DEFAULT_EMPRESA: EmpresaConfig = {
   nombre: "Mi Empresa S.A.", rut: "76.000.000-0",
   direccion: "Av. Principal 1234, Puerto Montt", telefono: null, web: null,
-  ciudad: "Puerto Montt", logo_url: null,
+  ciudad: "Puerto Montt", logo_url: null, tipo_empresa: "servicios",
 };
 
 function PrintPage() {

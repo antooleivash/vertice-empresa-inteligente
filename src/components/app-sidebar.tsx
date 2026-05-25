@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-type Item = { to: string; label: string; icon: React.ComponentType<{ className?: string }>; module: string };
+type Item = { to: string; label: string; icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; module: string };
 type Section = { title: string; items: Item[]; color: string; bg: string; dot: string };
 
 const sections: Section[] = [
