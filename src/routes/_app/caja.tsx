@@ -227,6 +227,75 @@ function CajaPage() {
   );
 }
 
+function ProductoSelector({
+  value, productos, onTextChange, onSelect,
+}: {
+  value: string;
+  productos: ProductoInv[];
+  onTextChange: (t: string) => void;
+  onSelect: (p: ProductoInv) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [open]);
+
+  const q = value.trim().toLowerCase();
+  const filtered = useMemo(
+    () => productos.filter((p) => !q || p.nombre.toLowerCase().includes(q) || p.codigo?.toLowerCase().includes(q)),
+    [productos, q],
+  );
+
+  return (
+    <div ref={wrapRef} className="relative">
+      <Input
+        value={value}
+        onChange={(e) => { onTextChange(e.target.value); setOpen(true); }}
+        onFocus={() => setOpen(true)}
+        placeholder="Producto o servicio"
+        autoComplete="off"
+      />
+      {open && productos.length > 0 && (
+        <div className="absolute z-50 mt-1 w-[min(28rem,90vw)] max-h-64 overflow-y-auto rounded-md border bg-popover text-popover-foreground shadow-md">
+          {filtered.length === 0 ? (
+            <div className="px-3 py-2 text-xs text-muted-foreground">
+              Sin coincidencias. Puedes escribir libremente.
+            </div>
+          ) : (
+            filtered.map((p) => {
+              const sinStock = !p.stock || p.stock <= 0;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onMouseDown={(e) => { e.preventDefault(); onSelect(p); setOpen(false); }}
+                  className={cn(
+                    "w-full text-left px-3 py-2 text-sm hover:bg-accent flex items-center justify-between gap-2 border-b last:border-b-0",
+                    sinStock && "text-muted-foreground",
+                  )}
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate font-medium">{p.nombre}</div>
+                    <div className="text-xs text-muted-foreground">{formatCLP(p.precio)} · Stock: {p.stock} {p.unidad}</div>
+                  </div>
+                  {sinStock && <Badge variant="secondary" className="shrink-0 text-[10px]">Sin stock</Badge>}
+                </button>
+              );
+            })
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function escapeHtml(s: string) {
   return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 }
