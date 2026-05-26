@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PageHeader, PageShell } from "@/components/page-shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { formatCLP } from "@/lib/domain";
 import { useLocalList, useLocalValue, uid } from "@/lib/local-store";
+import { cn } from "@/lib/utils";
+
+type ProductoInv = {
+  id: string; codigo: string; nombre: string;
+  unidad: string; stock: number; precio: number;
+};
 import { useEmpresa, type EmpresaConfig } from "@/hooks/use-empresa";
 import { Plus, Printer, FileText, Trash2, Info, Wallet } from "lucide-react";
 import { toast } from "sonner";
