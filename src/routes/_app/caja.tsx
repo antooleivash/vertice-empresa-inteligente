@@ -25,7 +25,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/caja")({ component: CajaPage });
 
-type Item = { descripcion: string; cantidad: number; precio: number };
+type Item = { descripcion: string; cantidad: number; precio: number; productoId?: string };
 type MetodoPago = "Efectivo" | "Débito" | "Crédito" | "Transferencia" | "Otro";
 
 type Venta = {
