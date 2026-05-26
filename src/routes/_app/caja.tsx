@@ -306,6 +306,40 @@ function escapeHtml(s: string) {
   return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 }
 
+// Marcador que enlaza un ingreso con la venta de origen.
+const VENTA_TAG = (id: string) => `[venta:${id}]`;
+
+function ventaPayload(v: Venta) {
+  const itemsTxt = v.items.map((it) => `${it.cantidad}× ${it.descripcion}`).join(", ");
+  const cliente = v.cliente?.trim() ? ` · Cliente: ${v.cliente.trim()}` : "";
+  return {
+    concepto: `Venta #${String(v.numero).padStart(5, "0")}${v.cliente?.trim() ? ` - ${v.cliente.trim()}` : ""}`,
+    categoria: "Ventas",
+    monto: v.total,
+    mes: v.fecha.slice(0, 7),
+    descripcion: `${VENTA_TAG(v.id)} ${itemsTxt}${cliente} · ${new Date(v.fecha).toLocaleDateString("es-CL")} · Pago: ${v.metodo}`,
+  };
+}
+
+async function syncIngresoFromVenta(v: Venta) {
+  const tag = VENTA_TAG(v.id);
+  const payload = ventaPayload(v);
+  const { data: existing } = await supabase
+    .from("ingresos").select("id").ilike("descripcion", `${tag}%`).limit(1);
+  if (existing && existing.length > 0) {
+    await supabase.from("ingresos").update(payload).eq("id", existing[0].id);
+  } else {
+    await supabase.from("ingresos").insert(payload);
+  }
+}
+
+async function deleteIngresoFromVenta(ventaId: string) {
+  const tag = VENTA_TAG(ventaId);
+  await supabase.from("ingresos").delete().ilike("descripcion", `${tag}%`);
+}
+
+
+
 function printDocumento(v: Venta, empresa: EmpresaConfig, tipo: "comprobante" | "cotizacion") {
   const w = window.open("", "_blank", "width=820,height=900");
   if (!w) return toast.error("Permite ventanas emergentes para imprimir.");
