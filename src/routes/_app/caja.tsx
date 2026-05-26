@@ -80,6 +80,14 @@ function CajaPage() {
     const nueva: Venta = { ...form, items, id: uid(), numero: contador, total };
     setVentas((prev) => [nueva, ...prev]);
     setContador((n) => n + 1);
+    // Descontar stock para items vinculados al inventario
+    const deltas = new Map<string, number>();
+    items.forEach((it) => {
+      if (it.productoId) deltas.set(it.productoId, (deltas.get(it.productoId) || 0) + it.cantidad);
+    });
+    if (deltas.size > 0) {
+      setProductos((prev) => prev.map((p) => deltas.has(p.id) ? { ...p, stock: p.stock - (deltas.get(p.id) || 0) } : p));
+    }
     setOpen(false);
     setForm(emptyForm());
     toast.success(`Venta #${nueva.numero} registrada`);
