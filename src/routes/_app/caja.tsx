@@ -136,7 +136,14 @@ function CajaPage() {
                   <TableBody>
                     {form.items.map((it, idx) => (
                       <TableRow key={idx}>
-                        <TableCell><Input value={it.descripcion} onChange={(e) => updateItem(idx, { descripcion: e.target.value })} placeholder="Producto o servicio" /></TableCell>
+                        <TableCell>
+                          <ProductoSelector
+                            value={it.descripcion}
+                            productos={productos}
+                            onTextChange={(t) => updateItem(idx, { descripcion: t, productoId: undefined })}
+                            onSelect={(p) => updateItem(idx, { descripcion: p.nombre, precio: p.precio, productoId: p.id })}
+                          />
+                        </TableCell>
                         <TableCell><Input type="number" min="0" value={it.cantidad} onChange={(e) => updateItem(idx, { cantidad: parseFloat(e.target.value) || 0 })} /></TableCell>
                         <TableCell><Input inputMode="numeric" value={it.precio ? new Intl.NumberFormat("es-CL").format(it.precio) : ""} onChange={(e) => updateItem(idx, { precio: parseInt(e.target.value.replace(/\D/g, "")) || 0 })} /></TableCell>
                         <TableCell className="text-right font-medium">{formatCLP(it.cantidad * it.precio)}</TableCell>
