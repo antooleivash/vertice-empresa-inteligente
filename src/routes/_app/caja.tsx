@@ -20,6 +20,8 @@ type ProductoInv = {
   unidad: string; stock: number; precio: number;
 };
 import { useEmpresa, type EmpresaConfig } from "@/hooks/use-empresa";
+import { supabase } from "@/integrations/supabase/client";
+
 import { Plus, Printer, FileText, Trash2, Info, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
