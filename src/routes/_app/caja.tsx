@@ -90,6 +90,8 @@ function CajaPage() {
     if (deltas.size > 0) {
       setProductos((prev) => prev.map((p) => deltas.has(p.id) ? { ...p, stock: p.stock - (deltas.get(p.id) || 0) } : p));
     }
+    // Registrar ingreso vinculado en Finanzas
+    syncIngresoFromVenta(nueva).catch(() => {});
     setOpen(false);
     setForm(emptyForm());
     toast.success(`Venta #${nueva.numero} registrada`);
@@ -100,7 +102,9 @@ function CajaPage() {
   const remove = (id: string) => {
     if (!confirm("¿Eliminar esta venta?")) return;
     setVentas((prev) => prev.filter((v) => v.id !== id));
+    deleteIngresoFromVenta(id).catch(() => {});
   };
+
 
   return (
     <PageShell>
