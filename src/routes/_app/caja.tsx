@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PageHeader, PageShell } from "@/components/page-shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,13 +13,19 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { formatCLP } from "@/lib/domain";
 import { useLocalList, useLocalValue, uid } from "@/lib/local-store";
+import { cn } from "@/lib/utils";
+
+type ProductoInv = {
+  id: string; codigo: string; nombre: string;
+  unidad: string; stock: number; precio: number;
+};
 import { useEmpresa, type EmpresaConfig } from "@/hooks/use-empresa";
 import { Plus, Printer, FileText, Trash2, Info, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/caja")({ component: CajaPage });
 
-type Item = { descripcion: string; cantidad: number; precio: number };
+type Item = { descripcion: string; cantidad: number; precio: number; productoId?: string };
 type MetodoPago = "Efectivo" | "Débito" | "Crédito" | "Transferencia" | "Otro";
 
 type Venta = {
@@ -39,6 +45,7 @@ function CajaPage() {
   const { empresa } = useEmpresa();
   const [ventas, setVentas] = useLocalList<Venta>("vertice.caja.ventas", []);
   const [contador, setContador] = useLocalValue<number>("vertice.caja.contador", 1);
+  const [productos, setProductos] = useLocalList<ProductoInv>("vertice.inventario.productos", []);
   const [open, setOpen] = useState(false);
 
   const emptyForm = (): Omit<Venta, "id" | "numero" | "total"> => ({
@@ -73,6 +80,14 @@ function CajaPage() {
     const nueva: Venta = { ...form, items, id: uid(), numero: contador, total };
     setVentas((prev) => [nueva, ...prev]);
     setContador((n) => n + 1);
+    // Descontar stock para items vinculados al inventario
+    const deltas = new Map<string, number>();
+    items.forEach((it) => {
+      if (it.productoId) deltas.set(it.productoId, (deltas.get(it.productoId) || 0) + it.cantidad);
+    });
+    if (deltas.size > 0) {
+      setProductos((prev) => prev.map((p) => deltas.has(p.id) ? { ...p, stock: p.stock - (deltas.get(p.id) || 0) } : p));
+    }
     setOpen(false);
     setForm(emptyForm());
     toast.success(`Venta #${nueva.numero} registrada`);
@@ -121,7 +136,14 @@ function CajaPage() {
                   <TableBody>
                     {form.items.map((it, idx) => (
                       <TableRow key={idx}>
-                        <TableCell><Input value={it.descripcion} onChange={(e) => updateItem(idx, { descripcion: e.target.value })} placeholder="Producto o servicio" /></TableCell>
+                        <TableCell>
+                          <ProductoSelector
+                            value={it.descripcion}
+                            productos={productos}
+                            onTextChange={(t) => updateItem(idx, { descripcion: t, productoId: undefined })}
+                            onSelect={(p) => updateItem(idx, { descripcion: p.nombre, precio: p.precio, productoId: p.id })}
+                          />
+                        </TableCell>
                         <TableCell><Input type="number" min="0" value={it.cantidad} onChange={(e) => updateItem(idx, { cantidad: parseFloat(e.target.value) || 0 })} /></TableCell>
                         <TableCell><Input inputMode="numeric" value={it.precio ? new Intl.NumberFormat("es-CL").format(it.precio) : ""} onChange={(e) => updateItem(idx, { precio: parseInt(e.target.value.replace(/\D/g, "")) || 0 })} /></TableCell>
                         <TableCell className="text-right font-medium">{formatCLP(it.cantidad * it.precio)}</TableCell>
@@ -202,6 +224,75 @@ function CajaPage() {
         </Table>
       </Card>
     </PageShell>
+  );
+}
+
+function ProductoSelector({
+  value, productos, onTextChange, onSelect,
+}: {
+  value: string;
+  productos: ProductoInv[];
+  onTextChange: (t: string) => void;
+  onSelect: (p: ProductoInv) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [open]);
+
+  const q = value.trim().toLowerCase();
+  const filtered = useMemo(
+    () => productos.filter((p) => !q || p.nombre.toLowerCase().includes(q) || p.codigo?.toLowerCase().includes(q)),
+    [productos, q],
+  );
+
+  return (
+    <div ref={wrapRef} className="relative">
+      <Input
+        value={value}
+        onChange={(e) => { onTextChange(e.target.value); setOpen(true); }}
+        onFocus={() => setOpen(true)}
+        placeholder="Producto o servicio"
+        autoComplete="off"
+      />
+      {open && productos.length > 0 && (
+        <div className="absolute z-50 mt-1 w-[min(28rem,90vw)] max-h-64 overflow-y-auto rounded-md border bg-popover text-popover-foreground shadow-md">
+          {filtered.length === 0 ? (
+            <div className="px-3 py-2 text-xs text-muted-foreground">
+              Sin coincidencias. Puedes escribir libremente.
+            </div>
+          ) : (
+            filtered.map((p) => {
+              const sinStock = !p.stock || p.stock <= 0;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onMouseDown={(e) => { e.preventDefault(); onSelect(p); setOpen(false); }}
+                  className={cn(
+                    "w-full text-left px-3 py-2 text-sm hover:bg-accent flex items-center justify-between gap-2 border-b last:border-b-0",
+                    sinStock && "text-muted-foreground",
+                  )}
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate font-medium">{p.nombre}</div>
+                    <div className="text-xs text-muted-foreground">{formatCLP(p.precio)} · Stock: {p.stock} {p.unidad}</div>
+                  </div>
+                  {sinStock && <Badge variant="secondary" className="shrink-0 text-[10px]">Sin stock</Badge>}
+                </button>
+              );
+            })
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
