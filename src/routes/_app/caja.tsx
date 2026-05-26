@@ -45,6 +45,7 @@ function CajaPage() {
   const { empresa } = useEmpresa();
   const [ventas, setVentas] = useLocalList<Venta>("vertice.caja.ventas", []);
   const [contador, setContador] = useLocalValue<number>("vertice.caja.contador", 1);
+  const [productos, setProductos] = useLocalList<ProductoInv>("vertice.inventario.productos", []);
   const [open, setOpen] = useState(false);
 
   const emptyForm = (): Omit<Venta, "id" | "numero" | "total"> => ({
